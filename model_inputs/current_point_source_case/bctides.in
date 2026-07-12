@@ -1,0 +1,8 @@
+! Spoon Estuary; model start 2011-05-01 00:00 AEST
+0 50.0 ! number of earth tidal potential constituents, cut-off depth
+0 ! nbfr: no tidal harmonic constituents
+1 ! number of open boundaries
+7 1 0 1 1 1 ! Ocean: nodes, elevation, velocity, temperature, salinity, AED
+1.0 ! nudging factor for T
+1.0 ! nudging factor for S
+1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 ! nudging factors for 17 AED variables

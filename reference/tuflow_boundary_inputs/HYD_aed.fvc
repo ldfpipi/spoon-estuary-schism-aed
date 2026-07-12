@@ -1,0 +1,104 @@
+! TUFLOW FV TUTORIAL
+! Estuary Model – 3D Model (with baroclinicity)
+GIS FORMAT == SHP
+SHP Projection  == ..\model\gis\projection.prj
+Tutorial Model == ON 
+
+!_________________________________________________________________
+! GENERAL PARAMETERS
+Bottom Drag Model == ks
+Include Salinity == 1,1
+Include Temperature == 1,1
+Spatial Order == 1,2
+Include Heat == 1
+
+! WATER QUALITY
+!_________________________________________________________________
+water quality model == EXTERNAL
+external water quality model dir == ../model/includes/aed
+
+!_________________________________________________________________
+! TIME COMMANDS
+Time Format == ISODATE
+Start Time == 01/05/2011 00:00:00
+End Time == 07/05/2011 00:00:00
+CFL == 0.6
+Timestep Limits == 0.1,30.
+Display dt == 900
+Cell Dry/Wet Depths == 0.001, 0.02 
+
+!_________________________________________________________________
+! MODEL PARAMETERS
+Stability Limits == 10.0,10.0
+
+include == ..\model\includes\turbulence\turbulence.fvc
+
+!_________________________________________________________________
+! GEOMETRY
+Spherical == 1
+Geometry 2D == ..\model\geo\hydraul_006.2dm
+Read GIS Nodestring == ..\model\gis\2d_ns_OpenBoundaries_001_L.shp
+Echo Geometry == 1
+
+!_________________________________________________________________
+!3D Geometry Commands
+Vertical Mesh Type == z
+Layer Faces == ..\model\csv\3D_Z_Layers_003.csv
+Sigma Layers == 4
+Min Bottom Layer Thickness == 0.5
+Cell 3D Depth == 1.0
+
+!_________________________________________________________________
+! MATERIAL PROPERTIES
+Set Mat == 1
+Read GIS Mat == ..\model\gis\2d_mat_Materials_002_R.shp
+Material == 1
+Bottom Roughness == 0.02
+End Material
+Material == 2
+Bottom Roughness == 0.75
+End Material
+Material == 3
+Bottom Roughness == 1.3
+End Material
+
+!_________________________________________________________________
+! INITIAL CONDITIONS
+Initial Temperature == 20.
+Initial Water Level == 0.052
+Initial Salinity == 10.
+
+!_________________________________________________________________
+! BOUNDARY CONDITIONS
+
+!River
+BC == Q, 1, ..\bc_dbase\Upstream_Q_001.csv
+	BC Header == time,flow_m3s-1,sal_ppt,temp_degC,NCS_ss1,OXY_oxy,NIT_amm,NIT_nit,PHS_frp,PHS_frp_ads,OGM_doc,OGM_don,OGM_dop,OGM_poc,OGM_pon,OGM_pop,PHY_mixed,TRC_age,TRC_tr1,TRC_tr2,TRC_tr3
+End BC
+
+!Ocean
+BC == WL, 2, ..\bc_dbase\Downstream_WL_001.csv
+	BC Header == time,tidelevel_m,sal_ppt,temp_degC,NCS_ss1,OXY_oxy,NIT_amm,NIT_nit,PHS_frp,PHS_frp_ads,OGM_doc,OGM_don,OGM_dop,OGM_poc,OGM_pon,OGM_pop,PHY_mixed,TRC_age,TRC_tr1,TRC_tr2,TRC_tr3
+End BC
+
+!Meteorology 
+Include == ..\bc_dbase\met\CFSR_20110401_20110701_AEST.fvc
+
+!_________________________________________________________________
+! OUTPUT COMMANDS
+Logdir == log
+
+Output Dir == ..\outputs\
+
+Output == netcdf
+	Output Parameters == h,v,d, temp, sal, rhow,air_temp,rel_hum,LW_rad,SW_rad,wq_all,wq_diag_all
+	Output Interval == 3600.
+End Output
+
+Output == flux
+	Output interval == 900.
+End Output
+
+Output == mass
+	Output Interval == 900.
+End Output
