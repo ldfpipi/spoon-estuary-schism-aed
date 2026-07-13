@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width,initial-scale=1" name="viewport"/>
+<title>TUFLOW FV-AED vs SCHISM-AED | Spoon Estuary</title>
+<link href="assets/style.css" rel="stylesheet"/>
+</head>
+<body>
+<header>
+<div class="hero">
+<div class="tag">TECHNICAL COMPARISON</div>
+<h1>TUFLOW FV-AED and SCHISM-AED</h1>
+<div class="subtitle">Water-quality output comparison for the Spoon Estuary tutorial case, 1–7 May 2011</div>
+<div class="byline">Prepared by Dongfang Liu</div>
+</div>
+</header>
+<nav>
+<div class="nav-inner">
+<a href="#summary">Summary</a><a href="#basis">Basis</a><a href="#oxygen">Oxygen</a>
+<a href="#tss">TSS &amp; TP</a><a href="#p2">P2</a><a href="#hov">Hovmöller</a>
+<a href="#gpp">GPP</a><a href="#nutrients">Nutrients</a><a href="#light">Light</a>
+<a href="#additional">Additional SCHISM</a><a href="#findings">Findings</a>
+</div>
+</nav>
+<main>
+<div class="summary" id="summary">
+<h2>Executive summary</h2>
+<p>The two models reproduce the same estuary geometry and several common first-order longitudinal patterns. Their vertical behaviour is not yet equivalent: TUFLOW FV-AED resolves pronounced depth structure, while the supplied SCHISM-AED water-quality outputs are frequently close to uniform over the active layers. SCHISM-AED PAR and total-light diagnostics are effectively zero and require configuration checking before biological differences are interpreted.</p>
+</div>
+<section id="basis">
+<h2>1. Comparison basis</h2>
+<table>
+<tr><th>Item</th><th>TUFLOW FV-AED</th><th>SCHISM-AED</th></tr>
+<tr><td>Window</td><td>1–7 May 2011, 145 saved times</td><td>1–7 May 2011, hourly comparison outputs</td></tr>
+<tr><td>Vertical representation</td><td>Maximum four vertical cells</td><td><code>nvrt=5</code>, <code>kz=1</code>: four active S layers plus one deep Z level</td></tr>
+<tr><td>Matched snapshot</td><td>2011-05-02 12:00 for DO map and curtain</td><td>2011-05-02 12:00 for most maps and curtains</td></tr>
+<tr><td>Units</td><td>Generally plotted in physical units</td><td>Several AED variables remain in native output units</td></tr>
+</table>
+<div class="warning"><strong>Scope:</strong> this is diagnostic inter-model verification, not formal validation against observations.</div>
+</section>
+<section id="oxygen">
+<h2>2. Dissolved oxygen</h2>
+<figure class="comparison-card">
+<div class="figure-title">Dissolved oxygen: map and along-estuary curtain</div>
+<div class="figure-note">Matched snapshot: 2011-05-02 12:00. TUFLOW and SCHISM are shown sequentially at full report width.</div>
+<div class="stack-grid">
+<article class="model-panel">
+<div class="model-name">TUFLOW FV-AED</div>
+<a class="image-stage stage-natural" href="assets/raw/tuflow_do_map_curtain_20110502_1200.png" rel="noopener" target="_blank">
+<img alt="TUFLOW dissolved oxygen map and curtain" src="assets/raw/tuflow_do_map_curtain_20110502_1200.png"/>
+</a>
+</article>
+<article class="model-panel">
+<div class="model-name">SCHISM-AED</div>
+<a class="image-stage stage-natural" href="assets/raw/schism_OXY_map_and_curtain_20110502T1200.png" rel="noopener" target="_blank">
+<img alt="SCHISM dissolved oxygen map and curtain" src="assets/raw/schism_OXY_map_and_curtain_20110502T1200.png"/>
+</a>
+</article>
+</div>
+<figcaption>Figure 1. Matched dissolved-oxygen map and curtain, shown as two full-width source figures.</figcaption>
+</figure>
+<p>The horizontal maps share the same broad downstream decline. The curtains differ strongly: TUFLOW resolves a high-oxygen surface layer and lower oxygen at depth, while SCHISM-AED is nearly uniform vertically at each chainage. Because the SCHISM grid contains multiple active layers, the result should be investigated as a coupling, mixing, initialization or extraction issue—not described as a one-layer mesh.</p>
+</section>
+<section id="tss">
+<h2>3. Velocity, TSS and total phosphorus</h2>
+<figure class="comparison-card">
+<div class="figure-title">Surface / near-bed / depth-averaged comparison</div>
+<div class="figure-note">Each 3 × 3 figure is displayed on its own full-width row to preserve labels, colour bars and panel detail.</div>
+<div class="stack-grid stack-portrait">
+<article class="model-panel">
+<div class="model-name">TUFLOW FV-AED</div>
+<a class="image-stage stage-natural" href="assets/raw/tuflow_velocity_tss_tp_20110503_1800.png" rel="noopener" target="_blank">
+<img alt="TUFLOW velocity TSS and TP nine-panel comparison" src="assets/raw/tuflow_velocity_tss_tp_20110503_1800.png"/>
+</a>
+</article>
+<article class="model-panel">
+<div class="model-name">SCHISM-AED</div>
+<a class="image-stage stage-natural" href="assets/raw/schism_04_velocity_tss_tp_nine_panel.png" rel="noopener" target="_blank">
+<img alt="SCHISM velocity TSS and TP nine-panel comparison" src="assets/raw/schism_04_velocity_tss_tp_nine_panel.png"/>
+</a>
+</article>
+</div>
+<figcaption>Figure 2. Surface, near-bed and depth-averaged plotting layouts; one model per row.</figcaption>
+</figure>
+<p>TUFLOW shows visible vertical differences, particularly in velocity and TSS. The supplied SCHISM result is more uniform through the active layers and shows stronger downstream TSS and TP increases. The exact SCHISM snapshot for this composite should be confirmed before quantitative interpretation.</p>
+</section>
+<section id="p2">
+<h2>4. P2 TSS profile and time series</h2>
+<figure class="comparison-card">
+<div class="figure-title">P2 vertical profile and depth-averaged history</div>
+<div class="figure-note">Nearly co-located stations; matched profile time 2011-05-02 12:00. Each source figure uses a separate full-width row.</div>
+<div class="stack-grid">
+<article class="model-panel">
+<div class="model-name">TUFLOW FV-AED</div>
+<a class="image-stage stage-natural" href="assets/raw/tuflow_p2_tss_profile_timeseries_20110502_1200.png" rel="noopener" target="_blank">
+<img alt="TUFLOW P2 TSS profile and time series" src="assets/raw/tuflow_p2_tss_profile_timeseries_20110502_1200.png"/>
+</a>
+</article>
+<article class="model-panel">
+<div class="model-name">SCHISM-AED</div>
+<a class="image-stage stage-natural" href="assets/raw/schism_p2_tss_profile_timeseries_20110502_1200.png" rel="noopener" target="_blank">
+<img alt="SCHISM P2 TSS profile and time series" src="assets/raw/schism_p2_tss_profile_timeseries_20110502_1200.png"/>
+</a>
+</article>
+</div>
+<figcaption>Figure 3. Nearly co-located P2 comparison; one model per row.</figcaption>
+</figure>
+<p>TUFLOW shows a vertical concentration gradient and gradual accumulation over the run. SCHISM is almost depth-uniform at the matched profile time and later produces large event-like pulses exceeding 9–10 mg/L.</p>
+</section>
+<section id="hov">
+<h2>5. P1 Hovmöller diagrams</h2>
+<div class="metric-stack">
+<figure class="metric-card">
+<div class="metric-title">Total suspended solids</div>
+<div class="stack-grid">
+<article class="model-panel"><div class="model-name">TUFLOW FV-AED</div><a class="image-stage stage-natural" href="assets/crops/tuflow_p1_tss_hovmoller.png" rel="noopener" target="_blank"><img alt="TUFLOW TSS Hovmoller" src="assets/crops/tuflow_p1_tss_hovmoller.png"/></a></article>
+<article class="model-panel"><div class="model-name">SCHISM-AED</div><a class="image-stage stage-natural" href="assets/raw/schism_p1_tss_hovmoller.png" rel="noopener" target="_blank"><img alt="SCHISM TSS Hovmoller" src="assets/raw/schism_p1_tss_hovmoller.png"/></a></article>
+</div>
+</figure>
+<figure class="metric-card">
+<div class="metric-title">Turbidity</div>
+<div class="stack-grid">
+<article class="model-panel"><div class="model-name">TUFLOW FV-AED</div><a class="image-stage stage-natural" href="assets/crops/tuflow_p1_turbidity_hovmoller.png" rel="noopener" target="_blank"><img alt="TUFLOW turbidity Hovmoller" src="assets/crops/tuflow_p1_turbidity_hovmoller.png"/></a></article>
+<article class="model-panel"><div class="model-name">SCHISM-AED</div><a class="image-stage stage-natural" href="assets/raw/schism_p1_turbidity_hovmoller.png" rel="noopener" target="_blank"><img alt="SCHISM turbidity Hovmoller" src="assets/raw/schism_p1_turbidity_hovmoller.png"/></a></article>
+</div>
+</figure>
+</div>
+<p>TUFLOW contains persistent depth dependence. SCHISM displays nearly vertical colour bands, indicating simultaneous water-column changes and little independent depth response.</p>
+</section>
+<section id="gpp">
+<h2>6. Gross primary production</h2>
+<figure class="comparison-card">
+<div class="figure-title">Gross primary production: 99th percentile</div>
+<div class="figure-note">Qualitative only: vertical statistic and native units are not yet harmonised. Maps are stacked to retain their original aspect ratios.</div>
+<div class="stack-grid stack-maps">
+<article class="model-panel">
+<div class="model-name">TUFLOW FV-AED</div>
+<a class="image-stage stage-natural" href="assets/raw/tuflow_gpp_p99.png" rel="noopener" target="_blank"><img alt="TUFLOW GPP p99 map" src="assets/raw/tuflow_gpp_p99.png"/></a>
+</article>
+<article class="model-panel">
+<div class="model-name">SCHISM-AED</div>
+<a class="image-stage stage-natural" href="assets/raw/schism_gpp_p99.png" rel="noopener" target="_blank"><img alt="SCHISM GPP p99 map" src="assets/raw/schism_gpp_p99.png"/></a>
+</article>
+</div>
+<figcaption>Figure 4. GPP 99th-percentile maps shown sequentially without forced cropping or aspect-ratio matching.</figcaption>
+</figure>
+<p>Both fields are near the bottom of their plotted ranges, but the statistic, vertical extraction and units are not fully harmonised. SCHISM GPP should be reassessed together with its near-zero light diagnostics.</p>
+</section>
+<section id="nutrients">
+<h2>7. Nutrients, chlorophyll-a and oxygen</h2>
+<p class="section-lead">Each variable is presented as a full-width TUFLOW figure followed by the corresponding full-width SCHISM figure. This avoids shrinking long curtain plots.</p>
+<div class="metric-stack">
+<figure class="metric-card">
+<div class="metric-title">Total nitrogen curtain</div>
+<div class="stack-grid">
+<article class="model-panel"><div class="model-name">TUFLOW FV-AED · 2011-05-03 12:00</div><a class="image-stage stage-natural" href="assets/crops/tuflow_tn_curtain.png" rel="noopener" target="_blank"><img alt="TUFLOW total nitrogen curtain" src="assets/crops/tuflow_tn_curtain.png"/></a></article>
+<article class="model-panel"><div class="model-name">SCHISM-AED · 2011-05-02 12:00</div><a class="image-stage stage-natural" href="assets/raw/schism_TOT_tn_curtain_20110502T1200.png" rel="noopener" target="_blank"><img alt="SCHISM total nitrogen curtain" src="assets/raw/schism_TOT_tn_curtain_20110502T1200.png"/></a></article>
+</div>
+</figure>
+<figure class="metric-card">
+<div class="metric-title">Chlorophyll-a curtain</div>
+<div class="stack-grid">
+<article class="model-panel"><div class="model-name">TUFLOW FV-AED · 2011-05-03 12:00</div><a class="image-stage stage-natural" href="assets/crops/tuflow_chla_curtain.png" rel="noopener" target="_blank"><img alt="TUFLOW chlorophyll-a curtain" src="assets/crops/tuflow_chla_curtain.png"/></a></article>
+<article class="model-panel"><div class="model-name">SCHISM-AED · 2011-05-02 12:00</div><a class="image-stage stage-natural" href="assets/raw/schism_PHY_tchla_curtain_20110502T1200.png" rel="noopener" target="_blank"><img alt="SCHISM chlorophyll-a curtain" src="assets/raw/schism_PHY_tchla_curtain_20110502T1200.png"/></a></article>
+</div>
+</figure>
+<figure class="metric-card">
+<div class="metric-title">Dissolved oxygen curtain</div>
+<div class="stack-grid">
+<article class="model-panel"><div class="model-name">TUFLOW FV-AED · 2011-05-03 12:00</div><a class="image-stage stage-natural" href="assets/crops/tuflow_do_curtain.png" rel="noopener" target="_blank"><img alt="TUFLOW dissolved oxygen curtain" src="assets/crops/tuflow_do_curtain.png"/></a></article>
+<article class="model-panel"><div class="model-name">SCHISM-AED · 2011-05-02 12:00</div><a class="image-stage stage-natural" href="assets/raw/schism_OXY_curtain_20110502T1200.png" rel="noopener" target="_blank"><img alt="SCHISM dissolved oxygen curtain" src="assets/raw/schism_OXY_curtain_20110502T1200.png"/></a></article>
+</div>
+</figure>
+</div>
+<p>TUFLOW shows stronger vertical organisation. SCHISM TN and chlorophyll-a are dominated by the downstream transition and by synchronized late-period pulses shared with TSS and TP. This remains a qualitative comparison because the displayed timestamps differ by 24 hours and units are not fully aligned.</p>
+</section>
+<section id="light">
+<h2>8. Light environment</h2>
+<p class="section-lead">Long curtain plots are presented one per row. Model-specific density, phytoplankton and GPP context is also kept at full width.</p>
+<div class="metric-stack">
+<figure class="metric-card">
+<div class="metric-title">Photosynthetically active radiation (PAR)</div>
+<div class="stack-grid">
+<article class="model-panel"><div class="model-name">TUFLOW FV-AED</div><a class="image-stage stage-natural" href="assets/crops/tuflow_par_curtain.png" rel="noopener" target="_blank"><img alt="TUFLOW PAR curtain" src="assets/crops/tuflow_par_curtain.png"/></a></article>
+<article class="model-panel"><div class="model-name">SCHISM-AED</div><a class="image-stage stage-natural" href="assets/raw/schism_TOT_par_curtain_20110502T1200.png" rel="noopener" target="_blank"><img alt="SCHISM PAR curtain" src="assets/raw/schism_TOT_par_curtain_20110502T1200.png"/></a></article>
+</div>
+</figure>
+<figure class="metric-card">
+<div class="metric-title">Total light</div>
+<div class="stack-grid">
+<article class="model-panel"><div class="model-name">TUFLOW FV-AED</div><a class="image-stage stage-natural" href="assets/crops/tuflow_total_light_curtain.png" rel="noopener" target="_blank"><img alt="TUFLOW total-light curtain" src="assets/crops/tuflow_total_light_curtain.png"/></a></article>
+<article class="model-panel"><div class="model-name">SCHISM-AED</div><a class="image-stage stage-natural" href="assets/raw/schism_TOT_light_curtain_20110502T1200.png" rel="noopener" target="_blank"><img alt="SCHISM total-light curtain" src="assets/raw/schism_TOT_light_curtain_20110502T1200.png"/></a></article>
+</div>
+</figure>
+</div>
+<div class="context-stack">
+<figure class="context-card"><div class="metric-title">TUFLOW-only context: density</div><a class="image-stage stage-natural" href="assets/crops/tuflow_density_curtain.png" rel="noopener" target="_blank"><img alt="TUFLOW density curtain" src="assets/crops/tuflow_density_curtain.png"/></a></figure>
+<figure class="context-card"><div class="metric-title">TUFLOW-only context: mixed phytoplankton</div><a class="image-stage stage-natural" href="assets/crops/tuflow_phy_mixed_curtain.png" rel="noopener" target="_blank"><img alt="TUFLOW mixed phytoplankton curtain" src="assets/crops/tuflow_phy_mixed_curtain.png"/></a></figure>
+<figure class="context-card"><div class="metric-title">SCHISM-only diagnostic in this group: GPP curtain</div><a class="image-stage stage-natural" href="assets/raw/schism_PHY_gpp_curtain_20110502T1200.png" rel="noopener" target="_blank"><img alt="SCHISM GPP curtain" src="assets/raw/schism_PHY_gpp_curtain_20110502T1200.png"/></a></figure>
+</div>
+<p>TUFLOW PAR and total light attenuate with depth. The SCHISM fields are effectively zero, making this the highest-priority configuration check. Verify radiation forcing, optical parameters, AED variable registration and interface units.</p>
+</section>
+<section id="additional">
+<h2>9. Additional SCHISM-AED diagnostics</h2>
+<h3>Depth-averaged maps</h3>
+<figure class="single-card"><a href="assets/figures/fig09_schism_map_gallery.png" rel="noopener" target="_blank"><img alt="SCHISM depth-averaged map gallery" src="assets/figures/fig09_schism_map_gallery.png"/></a><figcaption>Figure 5. Common-time map gallery.</figcaption></figure>
+<h3>Along-estuary curtains</h3>
+<figure class="single-card"><a href="assets/figures/fig10_schism_curtain_gallery.png" rel="noopener" target="_blank"><img alt="SCHISM curtain gallery" src="assets/figures/fig10_schism_curtain_gallery.png"/></a><figcaption>Figure 6. Common-time curtain gallery.</figcaption></figure>
+<h3>P2 multi-variable time series</h3>
+<figure class="single-card compact-single"><a href="assets/raw/schism_p2_multivariable_timeseries.png" rel="noopener" target="_blank"><img alt="SCHISM P2 multivariable time series" src="assets/raw/schism_p2_multivariable_timeseries.png"/></a><figcaption>Figure 7. Synchronized late-period nutrient, solids and chlorophyll-a pulses, accompanied by lower oxygen and zero GPP.</figcaption></figure>
+</section>
+<section id="findings">
+<h2>10. Findings and recommended next steps</h2>
+<ol class="findings">
+<li>Confirm initial, boundary and source concentrations and units.</li>
+<li>Verify radiation forcing and optical coupling in SCHISM-AED.</li>
+<li>Export vertical coordinates and layer thicknesses with the water-quality fields.</li>
+<li>Apply one shared plotting specification for both models.</li>
+<li>Generate station and curtain CSVs for automated difference metrics.</li>
+<li>Repeat the six-day case after light and vertical-structure checks.</li>
+</ol>
+<p><strong>Conclusion.</strong> The common diagnostic workflow is established, but the present outputs are not yet a like-for-like three-dimensional water-quality comparison. The differences are specific and testable, providing a clear route to formal inter-model verification.</p>
+</section>
+<div class="footer">Source notebook and original figures are included in the repository package.</div>
+</main>
+</body>
+</html>
