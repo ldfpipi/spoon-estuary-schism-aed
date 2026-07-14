@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width,initial-scale=1" name="viewport"/>
+<title>Boundary, Mesh and Bathymetry Update | Spoon Estuary</title>
+<link href="assets/style.css" rel="stylesheet"/>
+</head>
+<body>
+<header class="hero-compact">
+<div class="hero">
+<div class="tag">MODEL-SETUP UPDATE · 14 JULY 2026</div>
+<h1>Boundary, mesh and bathymetry alignment</h1>
+<div class="subtitle">How the SCHISM-AED Spoon Estuary setup was made hydraulically equivalent to the TUFLOW-FV boundary configuration</div>
+<div class="byline">Prepared by Dongfang Liu and Badin Gibbes</div>
+</div>
+</header>
+
+<nav>
+<div class="nav-inner">
+<a href="#overview">Overview</a>
+<a href="#boundary">Boundary alignment</a>
+<a href="#files">Files changed</a>
+<a href="#mesh">Real mesh</a>
+<a href="#bathymetry">Bathymetry</a>
+<a href="#verification">Verification</a>
+<a href="index.html">Return to main report</a>
+</div>
+</nav>
+
+<main>
+<div class="breadcrumb"><a href="index.html">← Return to the main TUFLOW FV-AED vs SCHISM-AED report</a></div>
+
+<div class="summary" id="overview">
+<div class="kicker">Purpose of this update</div>
+<h2>Equivalent physical boundaries, model-specific file formats</h2>
+<p>The TUFLOW-FV and SCHISM-AED models use different numerical grids and different boundary-file syntax, so the files cannot be literally identical. The objective was instead to make the physical boundary locations, discharge, water level and constituent forcing equivalent. The key correction was to replace the former SCHISM river element source with an explicit cross-section open-boundary discharge.</p>
+<p><span class="badge">Boundary formulation aligned</span></p>
+</div>
+
+<section id="boundary">
+<h2>1. Why the SCHISM river boundary was changed</h2>
+<table>
+<tr><th>Feature</th><th>TUFLOW-FV reference</th><th>Earlier SCHISM-AED setup</th><th>Revised SCHISM-AED setup</th></tr>
+<tr><td>River location</td><td>Lower/southern end of the domain</td><td>Lower/southern end</td><td>Lower/southern end</td></tr>
+<tr><td>River representation</td><td>Discharge distributed across the river boundary cross-section</td><td>20 m³/s injected into element 1, with nodes 3–1–2</td><td>20 m³/s prescribed across a five-node river open boundary</td></tr>
+<tr><td>Ocean location</td><td>Upper/northern end of the domain</td><td>Seven-node open boundary</td><td>Same seven-node open boundary retained</td></tr>
+<tr><td>Initial water level</td><td>0.052 m</td><td>0.052 m in <code>elev.ic</code></td><td>Unchanged: already matched</td></tr>
+</table>
+<div class="warning"><strong>Reason for the correction:</strong> the former SCHISM source used the correct discharge and constituent values, but it was a local element injection rather than the TUFLOW-style cross-section boundary. This could change the local momentum and mixing response close to the river entrance.</div>
+
+<div class="two-col">
+<div class="spec-card">
+<h3>River open boundary</h3>
+<p>The lower/southern boundary section was defined using the following five SCHISM node IDs:</p>
+<div class="code-block">15  10  6  3  1</div>
+<p class="small-note">For this selected boundary-node order, the prescribed SCHISM flux is written as <strong>−20 m³/s</strong>, corresponding to a physical inflow of <strong>20 m³/s into the domain</strong>.</p>
+</div>
+<div class="spec-card">
+<h3>Ocean open boundary</h3>
+<p>The existing upper/northern ocean boundary was retained with these seven node IDs:</p>
+<div class="code-block">1402  1408  1413  1417  1419  1418  1415</div>
+<p class="small-note">Ocean water level, temperature, salinity and the 17 AED boundary series continue to be applied at this boundary.</p>
+</div>
+</div>
+
+<h3>Boundary-equivalence workflow</h3>
+<ol class="findings">
+<li>Confirmed that the river and ocean ends were not reversed: the river is at the lower/southern end and the ocean/tidal boundary is at the upper/northern end in both models.</li>
+<li>Converted the five-node lower/southern river section into a second SCHISM open boundary in both <code>hgrid.gr3</code> and <code>hgrid.ll</code>.</li>
+<li>Retained the original seven-node ocean open boundary.</li>
+<li>Updated <code>bctides.in</code> so the river is driven as a prescribed normal-flux boundary and the ocean remains the water-level and constituent boundary.</li>
+<li>Applied the same physical river discharge used by TUFLOW-FV: 20 m³/s for the comparison period.</li>
+<li>Disabled the former element-source representation so the river inflow is not counted twice.</li>
+<li>Reused the audited river temperature, salinity and 17 AED constituent values at the revised river boundary.</li>
+</ol>
+</section>
+
+<section id="files">
+<h2>2. Files changed or checked</h2>
+<table class="file-list">
+<tr><th>File or file group</th><th>Role in the alignment</th></tr>
+<tr><td><code>hgrid.gr3</code>, <code>hgrid.ll</code></td><td>Changed the boundary-node definitions from one open boundary to two: a five-node river boundary and the retained seven-node ocean boundary.</td></tr>
+<tr><td><code>bctides.in</code></td><td>Added the river prescribed-flux boundary definition and retained the ocean elevation, temperature, salinity and AED boundary configuration.</td></tr>
+<tr><td>River flux time series</td><td>Used a constant physical inflow of 20 m³/s; for the selected SCHISM boundary orientation this is stored with a negative sign.</td></tr>
+<tr><td><code>source_sink.in</code>, <code>vsource.th</code>, <code>msource.th</code></td><td>The old local element-source route was removed or disabled for the revised case to prevent double counting. Its audited constituent values were transferred to the river-boundary forcing.</td></tr>
+<tr><td><code>elev.th</code>, <code>TEM_1.th</code>, <code>SAL_1.th</code>, <code>AED_1.th</code>–<code>AED_17.th</code></td><td>The existing ocean/tidal forcing series were retained.</td></tr>
+<tr><td><code>elev.ic</code></td><td>Confirmed at 0.052 m, matching the TUFLOW-FV initial water level.</td></tr>
+</table>
+<p class="small-note">The earlier audit found 744 hourly records for the common forcing period and confirmed that the river discharge and the audited temperature, salinity and 17 AED values were numerically consistent between the supplied model inputs.</p>
+</section>
+
+<section id="mesh">
+<h2>3. Real horizontal mesh comparison</h2>
+<p>The two models use the same Spoon Estuary geometry and the same 1,419 horizontal vertices/nodes, but they do not use the same element topology. The TUFLOW-FV 2DM contains 1,375 reported two-dimensional cells, dominated by quadrilateral cells, whereas the SCHISM <code>hgrid.gr3</code> contains 2,535 triangular elements. The zoomed view shows the same local area represented by rectangles/quadrilaterals in TUFLOW-FV and by triangular subdivisions in SCHISM.</p>
+<figure class="figure-wide">
+<a href="assets/updates/real_mesh_comparison_tuflow_schism.png" target="_blank" rel="noopener">
+<img src="assets/updates/real_mesh_comparison_tuflow_schism.png" alt="Real TUFLOW-FV and SCHISM horizontal mesh comparison with zoomed cells"/>
+</a>
+<figcaption>Figure 1. Real TUFLOW-FV 2DM mesh and real SCHISM <code>hgrid.gr3</code> mesh. Click the figure to open the full-resolution image.</figcaption>
+</figure>
+<div class="warning"><strong>Interpretation:</strong> the shared vertex set means the planform geometry and nodal bathymetry can be compared directly, but cell-centred quantities are not one-to-one because one TUFLOW quadrilateral can be represented by two SCHISM triangles.</div>
+</section>
+
+<section id="bathymetry">
+<h2>4. Bathymetry comparison</h2>
+<p>The bathymetry fields are plotted on a common colour scale. The channel, shallow margins, deeper upstream basin and downstream bends have the same spatial depth pattern. The small visual differences in cell texture are caused by quadrilateral versus triangular rendering rather than a different bathymetric dataset.</p>
+<figure class="figure-wide">
+<a href="assets/updates/bathymetry_comparison_tuflow_schism.png" target="_blank" rel="noopener">
+<img src="assets/updates/bathymetry_comparison_tuflow_schism.png" alt="TUFLOW-FV and SCHISM bathymetry comparison using a shared depth colour scale"/>
+</a>
+<figcaption>Figure 2. TUFLOW-FV and SCHISM bathymetry shown using the same local coordinates and shared depth colour scale. Click the figure to open the full-resolution image.</figcaption>
+</figure>
+</section>
+
+<section id="verification">
+<h2>5. Alignment checks</h2>
+<div class="status-grid">
+<div class="status-card"><strong>River location</strong>Lower/southern end in both models</div>
+<div class="status-card"><strong>Ocean location</strong>Upper/northern end in both models</div>
+<div class="status-card"><strong>River discharge</strong>20 m³/s physical inflow</div>
+<div class="status-card"><strong>Initial water level</strong>0.052 m in both models</div>
+<div class="status-card"><strong>Horizontal vertices</strong>1,419 shared locations</div>
+<div class="status-card"><strong>Bathymetry</strong>Same nodal depth pattern and range</div>
+</div>
+
+<table>
+<tr><th>Aspect</th><th>Alignment conclusion</th></tr>
+<tr><td>Boundary geometry</td><td>The river is now represented as a cross-section open boundary in SCHISM rather than a local element source.</td></tr>
+<tr><td>Hydraulic forcing</td><td>The physical discharge is the same as TUFLOW-FV; the negative SCHISM file value reflects only the selected boundary orientation/sign convention.</td></tr>
+<tr><td>Water-quality forcing</td><td>The audited temperature, salinity and 17 AED values are retained for the equivalent boundary forcing.</td></tr>
+<tr><td>Mesh geometry</td><td>The domain and vertex locations are shared.</td></tr>
+<tr><td>Mesh topology</td><td>Not identical: TUFLOW-FV uses quadrilateral cells while SCHISM uses triangles.</td></tr>
+<tr><td>Bathymetry</td><td>Equivalent nodal bathymetry; rendering differences arise from topology.</td></tr>
+</table>
+
+<div class="summary">
+<h2>Conclusion</h2>
+<p>The principal structural boundary difference has been removed. SCHISM-AED now applies the Spoon Estuary river input across the same physical boundary section and with the same 20 m³/s inflow represented in TUFLOW-FV. The models still differ in numerical topology and solver formulation, so future comparisons should be described as <strong>equivalent boundary and forcing configurations</strong>, not identical numerical models.</p>
+</div>
+
+<div class="cta-row">
+<a class="button-link" href="index.html">Return to the main comparison report</a>
+<a class="button-link secondary" href="assets/updates/real_mesh_comparison_tuflow_schism.png" target="_blank" rel="noopener">Open mesh figure</a>
+<a class="button-link secondary" href="assets/updates/bathymetry_comparison_tuflow_schism.png" target="_blank" rel="noopener">Open bathymetry figure</a>
+</div>
+</section>
+
+<div class="footer">Spoon Estuary TUFLOW FV-AED and SCHISM-AED model-setup update.</div>
+</main>
+</body>
+</html>
