@@ -1,0 +1,226 @@
+#!/bin/bash
+#PBS -N spoon6_full
+#PBS -q routeq
+#PBS -l select=1:ncpus=64:mpiprocs=64:mem=20gb
+#PBS -l place=pack
+#PBS -l walltime=24:00:00
+#PBS -j oe
+
+umask 0002
+ulimit -s unlimited
+
+ENVFILE=/proj/catchmodel/schism_aed/load_athena_env.sh
+EXE=/proj/catchmodel/schism_aed/bin/pschism_AED_BLD_STANDALONE_SH_MEM_COMM_TVD-VL
+RUN_DIR=/scratch/catchmodel/liud1/schism_aed_runs/spoon_sczaed_compare_6day_fullvars_athena_test
+LOG=schism_athena.log
+NSCRIBE=26
+
+echo "============================================================"
+echo "Spoon Estuary SCHISM-AED full six-day Athena test"
+echo "PBS job ID : ${PBS_JOBID:-N/A}"
+echo "Host       : $(hostname)"
+echo "Start time : $(date)"
+echo "============================================================"
+
+if [ ! -f "$ENVFILE" ]; then
+    echo "ERROR: environment script not found: $ENVFILE"
+    exit 1
+fi
+
+source "$ENVFILE"
+
+cd "$RUN_DIR" || {
+    echo "ERROR: cannot enter run directory: $RUN_DIR"
+    exit 2
+}
+
+if [ ! -x "$EXE" ]; then
+    echo "ERROR: executable is missing or not executable:"
+    echo "$EXE"
+    exit 3
+fi
+
+if [ ! -f "${PBS_NODEFILE:-}" ]; then
+    echo "ERROR: PBS_NODEFILE is unavailable."
+    exit 4
+fi
+
+NPROC=$(wc -l < "$PBS_NODEFILE")
+
+echo
+echo "===== PBS ALLOCATION ====="
+echo "Run directory : $(pwd)"
+echo "Executable    : $EXE"
+echo "MPI launcher  : $(command -v mpiexec)"
+echo "MPI ranks     : $NPROC"
+echo "NSCRIBE       : $NSCRIBE"
+echo "Compute ranks : $((NPROC - NSCRIBE))"
+echo "Node file     : $PBS_NODEFILE"
+sort "$PBS_NODEFILE" | uniq -c
+
+if [ "$NPROC" -ne 64 ]; then
+    echo "ERROR: expected 64 MPI ranks, but PBS supplied $NPROC."
+    exit 5
+fi
+
+if [ "$NPROC" -le "$NSCRIBE" ]; then
+    echo "ERROR: NPROC must be greater than NSCRIBE."
+    exit 6
+fi
+
+echo
+echo "===== REQUIRED INPUT CHECK ====="
+
+REQUIRED_FILES=(
+    param.nml
+    aed.nml
+    hgrid.gr3
+    hgrid.ll
+    vgrid.in
+    bctides.in
+    source_sink.in
+    vsource.th
+    msource.th
+    windrot_geo2proj.gr3
+    sflux/sflux_inputs.txt
+    sflux/sflux_air_1.1.nc
+    sflux/sflux_air_1.2.nc
+    sflux/sflux_air_1.3.nc
+    sflux/sflux_air_1.4.nc
+    sflux/sflux_air_1.5.nc
+    sflux/sflux_air_1.6.nc
+    sflux/sflux_air_1.7.nc
+    sflux/sflux_rad_1.1.nc
+    sflux/sflux_rad_1.2.nc
+    sflux/sflux_rad_1.3.nc
+    sflux/sflux_rad_1.4.nc
+    sflux/sflux_rad_1.5.nc
+    sflux/sflux_rad_1.6.nc
+    sflux/sflux_rad_1.7.nc
+)
+
+missing=0
+for file in "${REQUIRED_FILES[@]}"; do
+    if [ -s "$file" ]; then
+        printf "OK       %s\n" "$file"
+    else
+        printf "MISSING  %s\n" "$file"
+        missing=1
+    fi
+done
+
+if [ ! -d aed ]; then
+    echo "MISSING  aed/"
+    missing=1
+else
+    echo "OK       aed/"
+fi
+
+if [ "$missing" -ne 0 ]; then
+    echo "ERROR: required model inputs are missing."
+    exit 7
+fi
+
+echo
+echo "===== PARAM.NML SETTINGS ====="
+grep -niE \
+'^[[:space:]]*(rnday|dt|nspool|ihfskip|start_year|start_month|start_day|start_hour|utc_start|nws|ihconsv|ihot|nhot)[[:space:]]*=' \
+param.nml
+
+RNDAY=$(awk -F= '
+    /^[[:space:]]*rnday[[:space:]]*=/ {
+        value=$2
+        sub(/!.*/, "", value)
+        gsub(/[[:space:]]/, "", value)
+        print value
+        exit
+    }
+' param.nml)
+
+if [ "$RNDAY" != "6" ] && [ "$RNDAY" != "6.0" ]; then
+    echo "ERROR: this is not the full six-day case. rnday=$RNDAY"
+    exit 8
+fi
+
+echo
+echo "===== ABSOLUTE PATH AUDIT ====="
+grep -nE \
+'/home/uqdliu17|/QRISdata|/scratch/uq|/proj/uq' \
+param.nml aed.nml sflux/sflux_inputs.txt || \
+echo "OK: no Bunya-specific absolute paths found in primary configuration files."
+
+echo
+echo "===== EXECUTABLE LIBRARY CHECK ====="
+if ldd "$EXE" | grep -q "not found"; then
+    echo "ERROR: executable has missing libraries."
+    ldd "$EXE" | grep "not found"
+    exit 9
+else
+    echo "OK: all executable libraries are available."
+fi
+
+echo
+echo "===== PREPARE CLEAN OUTPUTS ====="
+mkdir -p outputs
+find outputs -mindepth 1 -maxdepth 1 -exec rm -rf {} +
+touch outputs/flux.out
+
+rm -f \
+    "$LOG" \
+    fatal.error \
+    mirror.out \
+    fort.*
+
+echo
+echo "===== START SCHISM-AED ====="
+echo "Start time: $(date)"
+
+{
+    echo
+    echo
+    echo "NEW ATHENA RUN"
+    echo "Run started at $(date)"
+    echo "PBS job ID: ${PBS_JOBID:-N/A}"
+} > "$LOG"
+
+mpiexec -np "$NPROC" "$EXE" "$NSCRIBE" >> "$LOG" 2>&1
+run_status=$?
+
+echo
+echo "===== MPI FINISHED ====="
+echo "Exit code: $run_status"
+echo "End time : $(date)"
+
+if [ -s fatal.error ]; then
+    echo
+    echo "===== FATAL.ERROR ====="
+    cat fatal.error
+    run_status=1
+fi
+
+if strings "$LOG" | grep -qi "ABORT"; then
+    echo
+    echo "===== ABORT FOUND IN LOG ====="
+    strings "$LOG" |
+        grep -i -B10 -A20 "ABORT" |
+        tail -120
+    run_status=1
+fi
+
+echo
+echo "===== OUTPUT SUMMARY ====="
+find outputs -maxdepth 1 -type f -printf "%f %s bytes\n" |
+    sort |
+    tail -50
+
+echo
+echo "===== LOG TAIL ====="
+tail -100 "$LOG"
+
+echo
+echo "============================================================"
+echo "Final status: $run_status"
+echo "Finished at : $(date)"
+echo "============================================================"
+
+exit "$run_status"

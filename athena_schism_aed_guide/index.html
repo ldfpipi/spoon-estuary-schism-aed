@@ -1,0 +1,535 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SCHISM-AED on Athena HPC</title>
+<style>
+:root {
+  --navy:#14365d; --blue:#245b96; --light:#eef4fa; --green:#e9f5e5;
+  --gold:#fff3cc; --border:#cbd6e2; --text:#1f2933; --muted:#5c6b7a;
+}
+* { box-sizing:border-box; }
+html { scroll-behavior:smooth; }
+body { margin:0; font-family:Arial,Helvetica,sans-serif; color:var(--text); line-height:1.58; background:#f7f9fc; }
+header { background:linear-gradient(135deg,var(--navy),var(--blue)); color:white; padding:56px 22px 46px; }
+.header-inner, main, footer { max-width:1120px; margin:auto; }
+h1 { margin:0 0 8px; font-size:clamp(2rem,5vw,3.3rem); line-height:1.08; }
+.subtitle { font-size:1.16rem; opacity:.92; margin:0 0 22px; }
+.credit { font-weight:700; margin:0; }
+.badges { display:flex; flex-wrap:wrap; gap:10px; margin-top:24px; }
+.badge { background:rgba(255,255,255,.14); border:1px solid rgba(255,255,255,.35); border-radius:999px; padding:7px 12px; font-size:.92rem; }
+nav { position:sticky; top:0; z-index:5; background:white; border-bottom:1px solid var(--border); box-shadow:0 2px 8px rgba(20,54,93,.06); }
+nav .nav-inner { max-width:1120px; margin:auto; padding:10px 18px; overflow-x:auto; white-space:nowrap; }
+nav a { color:var(--navy); text-decoration:none; font-weight:700; margin-right:20px; font-size:.92rem; }
+main { padding:34px 20px 70px; }
+section { background:white; border:1px solid var(--border); border-radius:12px; padding:28px; margin:0 0 24px; box-shadow:0 4px 15px rgba(20,54,93,.05); }
+h2 { color:var(--navy); margin-top:0; border-bottom:2px solid #dce7f2; padding-bottom:8px; }
+h3 { color:var(--blue); margin-top:28px; }
+table { width:100%; border-collapse:collapse; margin:16px 0; }
+th, td { border:1px solid var(--border); padding:10px 12px; text-align:left; vertical-align:top; }
+th { background:var(--navy); color:white; }
+code { font-family:Consolas,"Courier New",monospace; }
+pre { background:#111827; color:#e5edf5; padding:16px; border-radius:9px; overflow:auto; line-height:1.42; font-size:.87rem; }
+.callout { border-left:5px solid var(--blue); background:var(--light); padding:14px 16px; margin:16px 0; border-radius:6px; }
+.success { border-left-color:#4b8c39; background:var(--green); }
+.warning { border-left-color:#d8a423; background:var(--gold); }
+.grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:14px; }
+.card { border:1px solid var(--border); border-radius:9px; padding:16px; background:#fbfdff; }
+.card strong { display:block; color:var(--navy); margin-bottom:5px; }
+a.button { display:inline-block; text-decoration:none; color:white; background:var(--blue); padding:10px 15px; border-radius:7px; font-weight:700; margin:5px 8px 5px 0; }
+.small { color:var(--muted); font-size:.92rem; }
+footer { padding:30px 20px 50px; color:var(--muted); text-align:center; }
+
+.card, .card code, td, th {
+  min-width: 0;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+.card code {
+  display: block;
+  white-space: normal;
+}
+
+@media(max-width:650px) { section { padding:20px; } th,td { font-size:.9rem; } }
+</style>
+</head>
+<body>
+<header>
+  <div class="header-inner">
+    <h1>SCHISM-AED on Athena HPC</h1>
+    <p class="subtitle">Installation, compilation, PBS configuration and full Spoon Estuary runtime validation</p>
+    <p class="credit">Prepared by Dongfang Liu, Badin Gibbes and Aditya Singh</p>
+    <div class="badges">
+      <span class="badge">Compilation: 2 July 2026</span>
+      <span class="badge">Runtime validation: 16 July 2026</span>
+      <span class="badge">Scheduler: PBS Pro</span>
+      <span class="badge">MPI: Intel oneAPI MPI 2021.14</span>
+    </div>
+  </div>
+</header>
+
+<nav><div class="nav-inner">
+<a href="#status">Status</a><a href="#storage">Storage</a><a href="#compile">Installation</a>
+<a href="#case">Test case</a><a href="#pbs">PBS script</a><a href="#validation">Validation</a>
+<a href="#troubleshooting">Troubleshooting</a>
+</div></nav>
+
+<main>
+<section id="status">
+<h2>1. Verified status</h2>
+<div class="callout warning"><strong>Validated resource request:</strong> the successful Athena run used <code>64 MPI ranks</code> with <code>20 GB</code> memory. The earlier 64 GB request was not the final working configuration.</div>
+<div class="callout success"><strong>Full operational validation completed.</strong>
+SCHISM-AED was compiled on Athena and the complete six-day Spoon Estuary full-variables case was successfully run using the installed Athena executable.</div>
+<div class="grid">
+<div class="card"><strong>Project installation</strong><code>/proj/catchmodel/schism_aed</code></div>
+<div class="card"><strong>Installed executable</strong><code>/proj/catchmodel/schism_aed/bin/pschism_AED_BLD_STANDALONE_SH_MEM_COMM_TVD-VL</code></div>
+<div class="card"><strong>Validated model case</strong>Spoon Estuary, six days, full AED variables</div>
+<div class="card"><strong>Validated runtime configuration</strong>64 MPI ranks, 20 GB memory</div>
+</div>
+<p>The original compilation guide recorded a successful build but correctly stated that runtime validation was still outstanding. The present page closes that gap by documenting the subsequent full-case transfer, PBS conversion and Athena execution.</p>
+<a class="button" href="SCHISM-AED_Compilation_on_Athena.pdf">Original compilation guide (PDF)</a>
+<a class="button" href="run_spoon_sczaed_6day_athena.pbs">Athena PBS file</a>
+</section>
+
+<section id="storage">
+<h2>2. Athena storage layout</h2>
+<table>
+<tr><th>Purpose</th><th>Linux path</th><th>Windows share</th></tr>
+<tr><td>Source code, executable, documentation and clean reference cases</td><td><code>/proj/catchmodel</code></td><td><code>\\vastsmb.esp.hpc\projcatchmodel</code></td></tr>
+<tr><td>Active simulations and model results</td><td><code>/scratch/catchmodel</code></td><td><code>\\vastsmb.esp.hpc\scratchcatchmodel</code></td></tr>
+</table>
+<pre><code>umask 0002
+mkdir -p /proj/catchmodel/schism_aed
+mkdir -p /proj/catchmodel/schism_aed/model_cases
+mkdir -p /scratch/catchmodel/$USER/schism_aed_runs</code></pre>
+<div class="callout warning"><strong>Recommended practice:</strong> keep a clean reference case under <code>/proj</code>, but run the model and write large outputs under <code>/scratch</code>.</div>
+</section>
+
+<section id="compile">
+<h2>3. Installation and compilation</h2>
+<h3>3.1 Request an interactive compute node</h3>
+<pre><code>qsub -I -q interq   -l select=1:ncpus=8:mem=32gb   -l walltime=02:00:00
+
+hostname
+echo &quot;$PBS_JOBID&quot;</code></pre>
+
+<h3>3.2 Initialise Spack and load the verified environment</h3>
+<pre><code>source /opt/sw/spack/hpc/startHPC.sh
+
+spack load /ln6ek2b   # gcc@13.2.0
+spack load /jclrs2i   # netcdf-c@4.9.2
+spack load /gibamqu   # netcdf-fortran@4.6.0
+spack load /3dyxf6h   # cmake@3.30.5</code></pre>
+
+<table>
+<tr><th>Component</th><th>Verified version</th></tr>
+<tr><td>GCC / GFortran</td><td>13.2.0</td></tr>
+<tr><td>NetCDF-C</td><td>4.9.2</td></tr>
+<tr><td>NetCDF-Fortran</td><td>4.6.0</td></tr>
+<tr><td>CMake</td><td>3.30.5</td></tr>
+<tr><td>MPI</td><td>Intel oneAPI MPI 2021.14</td></tr>
+<tr><td>Scheduler</td><td>PBS Pro</td></tr>
+</table>
+
+<h3>3.3 Clone AED_Tools and obtain the sources</h3>
+<pre><code>cd /proj/catchmodel/schism_aed
+git clone https://github.com/AquaticEcoDynamics/AED_Tools.git
+cd AED_Tools
+chmod -R g+rwX,o-rwx .
+
+./fetch_sources.sh libaed schism
+./fetch_sources.sh schism</code></pre>
+<p>Verify the required SCHISM commit and AED source link:</p>
+<pre><code>cat schism-aed/gitlog-schism
+git -C schism rev-parse HEAD
+ls -ld schism/src/AED</code></pre>
+<div class="callout"><strong>Verified SCHISM commit:</strong> <code>e59606c8ef9cc049ef616b8c691e0cf363e083fc</code></div>
+
+<h3>3.4 Adapt AED_Tools for Athena</h3>
+<p>Back up the build files, disable the unnecessary GD dependency, and allow the build environment to detect Intel MPI through <code>I_MPI_ROOT</code>.</p>
+<pre><code>cp build_env.inc build_env.inc.original
+cp build_schism.sh build_schism.sh.original
+
+sed -i &#x27;/&quot;build_schism.sh&quot;)/,/;;/s/NEED_GD=true/NEED_GD=false/&#x27; build_env.inc</code></pre>
+<p>Replace the OpenMPI-only detection block with Intel-MPI-aware logic:</p>
+<pre><code>sed -i &#x27;151,166c\
+# Detect an available MPI installation: Intel MPI on Athena or OpenMPI elsewhere\
+if [ &quot;$NEED_OMPI&quot; = &quot;true&quot; ] ; then\
+  OMPIBASE=\
+  if [ -n &quot;$I_MPI_ROOT&quot; ] &amp;&amp; [ -x &quot;$I_MPI_ROOT/bin/mpif90&quot; ] &amp;&amp; [ -x &quot;$I_MPI_ROOT/bin/mpicc&quot; ] ; then\
+    OMPIBASE=&quot;$I_MPI_ROOT&quot;\
+    NEED_OMPI=false\
+  else\
+    BINDIR=`which ompi_info 2&gt;/dev/null`\
+    if [ &quot;$BINDIR&quot; != &quot;&quot; ] ; then\
+      BINDIR=`dirname &quot;$BINDIR&quot;`\
+      OMPIBASE=`dirname &quot;$BINDIR&quot;`\
+      NEED_OMPI=false\
+    fi\
+  fi\
+fi&#x27; build_env.inc
+
+bash -n build_env.inc</code></pre>
+
+<h3>3.5 Compile and resolve the utility race condition</h3>
+<pre><code>./build_schism.sh --with-aed 2&gt;&amp;1 | tee build_athena.log</code></pre>
+<p>If the parallel build reports a race involving <code>netcdf_var_names.mod</code>, rebuild the affected utilities serially:</p>
+<pre><code>cd /proj/catchmodel/schism_aed/AED_Tools/schism/build
+
+rm -f   Utility/Combining_Scripts/CMakeFiles/combine_output11.dir/netcdf_var_names.f90.o   Utility/Combining_Scripts/CMakeFiles/combine_output11.dir/netcdf_var_names.mod.stamp   Utility/Combining_Scripts/CMakeFiles/combine_output11_MPI.dir/netcdf_var_names.f90.o   Utility/Combining_Scripts/CMakeFiles/combine_output11_MPI.dir/netcdf_var_names.mod.stamp   include/netcdf_var_names.mod   include/NETCDF_VAR_NAMES.mod
+
+make -j1 combine_output11
+make -j1 combine_output11_MPI
+make -j1 2&gt;&amp;1 | tee -a ../../build_athena.log</code></pre>
+
+<h3>3.6 Install and verify the executable</h3>
+<pre><code>mkdir -p /proj/catchmodel/schism_aed/bin
+
+cp -p schism/build/bin/pschism_AED_BLD_STANDALONE_SH_MEM_COMM_TVD-VL   /proj/catchmodel/schism_aed/bin/
+
+source /proj/catchmodel/schism_aed/load_athena_env.sh
+
+ldd /proj/catchmodel/schism_aed/bin/pschism_AED_BLD_STANDALONE_SH_MEM_COMM_TVD-VL   | grep &quot;not found&quot;</code></pre>
+<p>No output from the final command means that no shared library is missing.</p>
+
+<h3>3.7 Reusable Athena environment</h3>
+<pre><code>#!/bin/bash
+umask 0002
+
+source /opt/sw/spack/hpc/startHPC.sh
+
+spack load /ln6ek2b
+spack load /jclrs2i
+spack load /gibamqu
+spack load /3dyxf6h
+
+export SCHISM_AED_ROOT=/proj/catchmodel/schism_aed
+export SCHISM_AED_EXE=/proj/catchmodel/schism_aed/bin/pschism_AED_BLD_STANDALONE_SH_MEM_COMM_TVD-VL</code></pre>
+</section>
+
+<section id="case">
+<h2>4. Transfer and prepare the validated case</h2>
+<h3>4.1 Transfer the Bunya case</h3>
+<p>The known working case was compressed on the UQ computer and uploaded from Windows PowerShell:</p>
+<pre><code>scp &quot;.\spoon_sczaed_compare_6day_fullvars.zip&quot; \
+  liud1@10.0.214.52:/proj/catchmodel/schism_aed/model_cases/</code></pre>
+<p class="small">The Athena login-node address can be confirmed during an active SSH session with <code>echo "$SSH_CONNECTION"</code>; the third field is the server-side address.</p>
+
+<h3>4.2 Check and extract the archive</h3>
+<pre><code>cd /proj/catchmodel/schism_aed/model_cases
+
+file spoon_sczaed_compare_6day_fullvars.zip
+unzip -t spoon_sczaed_compare_6day_fullvars.zip
+unzip -q spoon_sczaed_compare_6day_fullvars.zip</code></pre>
+
+<h3>4.3 Create a clean scratch run</h3>
+<pre><code>CASE=/proj/catchmodel/schism_aed/model_cases/spoon_sczaed_compare_6day_fullvars
+RUN=/scratch/catchmodel/liud1/schism_aed_runs/spoon_sczaed_compare_6day_fullvars_athena_test
+
+mkdir -p &quot;$RUN&quot;
+
+rsync -a   --exclude=&#x27;outputs*/&#x27;   --exclude=&#x27;analysis_outputs/&#x27;   --exclude=&#x27;postprocess_matt_matched/&#x27;   --exclude=&#x27;matt_exact_redraw/&#x27;   --exclude=&#x27;failed_job_*/&#x27;   --exclude=&#x27;boundary_rebuild_audit/&#x27;   --exclude=&#x27;grid_before_*/&#x27;   --exclude=&#x27;slurm-*&#x27;   --exclude=&#x27;*.png&#x27;   --exclude=&#x27;schism_error.log&#x27;   --exclude=&#x27;segfault_tail.txt&#x27;   &quot;$CASE/&quot; &quot;$RUN/&quot;
+
+mkdir -p &quot;$RUN/outputs&quot;</code></pre>
+
+<h3>4.4 Verified case settings</h3>
+<table>
+<tr><th>Setting</th><th>Value</th></tr>
+<tr><td>Simulation duration</td><td>6 days</td></tr>
+<tr><td>Time step</td><td>60 s</td></tr>
+<tr><td>Hydrodynamic output interval</td><td>60 time steps (hourly)</td></tr>
+<tr><td>Stack interval</td><td>600 time steps</td></tr>
+<tr><td>Start</td><td>2011-05-01 00:00</td></tr>
+<tr><td>Atmospheric forcing</td><td>SFLUX air and radiation files</td></tr>
+<tr><td>AED configuration</td><td>Full selected state and diagnostic variables</td></tr>
+</table>
+</section>
+
+<section id="pbs">
+<h2>5. PBS submission on Athena</h2>
+<div class="callout warning"><strong>Athena is not Bunya.</strong> Replace Slurm directives and <code>srun</code> with PBS directives and Intel MPI <code>mpiexec</code>.</div>
+<p>The successful full-case run requested one 64-CPU chunk, 64 MPI ranks and 20 GB of memory. An earlier 64 GB request remained queued because it was routed to the large-memory queue; reducing the memory request to the amount actually required allowed the job to start.</p>
+<a class="button" href="run_spoon_sczaed_6day_athena.pbs">Download the complete PBS script</a>
+<details>
+<summary><strong>Show the complete PBS script</strong></summary>
+<pre><code>#!/bin/bash
+#PBS -N spoon6_full
+#PBS -q routeq
+#PBS -l select=1:ncpus=64:mpiprocs=64:mem=64gb
+#PBS -l place=pack
+#PBS -l walltime=24:00:00
+#PBS -j oe
+
+umask 0002
+ulimit -s unlimited
+
+ENVFILE=/proj/catchmodel/schism_aed/load_athena_env.sh
+EXE=/proj/catchmodel/schism_aed/bin/pschism_AED_BLD_STANDALONE_SH_MEM_COMM_TVD-VL
+RUN_DIR=/scratch/catchmodel/liud1/schism_aed_runs/spoon_sczaed_compare_6day_fullvars_athena_test
+LOG=schism_athena.log
+NSCRIBE=26
+
+echo &quot;============================================================&quot;
+echo &quot;Spoon Estuary SCHISM-AED full six-day Athena test&quot;
+echo &quot;PBS job ID : ${PBS_JOBID:-N/A}&quot;
+echo &quot;Host       : $(hostname)&quot;
+echo &quot;Start time : $(date)&quot;
+echo &quot;============================================================&quot;
+
+if [ ! -f &quot;$ENVFILE&quot; ]; then
+    echo &quot;ERROR: environment script not found: $ENVFILE&quot;
+    exit 1
+fi
+
+source &quot;$ENVFILE&quot;
+
+cd &quot;$RUN_DIR&quot; || {
+    echo &quot;ERROR: cannot enter run directory: $RUN_DIR&quot;
+    exit 2
+}
+
+if [ ! -x &quot;$EXE&quot; ]; then
+    echo &quot;ERROR: executable is missing or not executable:&quot;
+    echo &quot;$EXE&quot;
+    exit 3
+fi
+
+if [ ! -f &quot;${PBS_NODEFILE:-}&quot; ]; then
+    echo &quot;ERROR: PBS_NODEFILE is unavailable.&quot;
+    exit 4
+fi
+
+NPROC=$(wc -l &lt; &quot;$PBS_NODEFILE&quot;)
+
+echo
+echo &quot;===== PBS ALLOCATION =====&quot;
+echo &quot;Run directory : $(pwd)&quot;
+echo &quot;Executable    : $EXE&quot;
+echo &quot;MPI launcher  : $(command -v mpiexec)&quot;
+echo &quot;MPI ranks     : $NPROC&quot;
+echo &quot;NSCRIBE       : $NSCRIBE&quot;
+echo &quot;Compute ranks : $((NPROC - NSCRIBE))&quot;
+echo &quot;Node file     : $PBS_NODEFILE&quot;
+sort &quot;$PBS_NODEFILE&quot; | uniq -c
+
+if [ &quot;$NPROC&quot; -ne 64 ]; then
+    echo &quot;ERROR: expected 64 MPI ranks, but PBS supplied $NPROC.&quot;
+    exit 5
+fi
+
+if [ &quot;$NPROC&quot; -le &quot;$NSCRIBE&quot; ]; then
+    echo &quot;ERROR: NPROC must be greater than NSCRIBE.&quot;
+    exit 6
+fi
+
+echo
+echo &quot;===== REQUIRED INPUT CHECK =====&quot;
+
+REQUIRED_FILES=(
+    param.nml
+    aed.nml
+    hgrid.gr3
+    hgrid.ll
+    vgrid.in
+    bctides.in
+    source_sink.in
+    vsource.th
+    msource.th
+    windrot_geo2proj.gr3
+    sflux/sflux_inputs.txt
+    sflux/sflux_air_1.1.nc
+    sflux/sflux_air_1.2.nc
+    sflux/sflux_air_1.3.nc
+    sflux/sflux_air_1.4.nc
+    sflux/sflux_air_1.5.nc
+    sflux/sflux_air_1.6.nc
+    sflux/sflux_air_1.7.nc
+    sflux/sflux_rad_1.1.nc
+    sflux/sflux_rad_1.2.nc
+    sflux/sflux_rad_1.3.nc
+    sflux/sflux_rad_1.4.nc
+    sflux/sflux_rad_1.5.nc
+    sflux/sflux_rad_1.6.nc
+    sflux/sflux_rad_1.7.nc
+)
+
+missing=0
+for file in &quot;${REQUIRED_FILES[@]}&quot;; do
+    if [ -s &quot;$file&quot; ]; then
+        printf &quot;OK       %s\n&quot; &quot;$file&quot;
+    else
+        printf &quot;MISSING  %s\n&quot; &quot;$file&quot;
+        missing=1
+    fi
+done
+
+if [ ! -d aed ]; then
+    echo &quot;MISSING  aed/&quot;
+    missing=1
+else
+    echo &quot;OK       aed/&quot;
+fi
+
+if [ &quot;$missing&quot; -ne 0 ]; then
+    echo &quot;ERROR: required model inputs are missing.&quot;
+    exit 7
+fi
+
+echo
+echo &quot;===== PARAM.NML SETTINGS =====&quot;
+grep -niE \
+&#x27;^[[:space:]]*(rnday|dt|nspool|ihfskip|start_year|start_month|start_day|start_hour|utc_start|nws|ihconsv|ihot|nhot)[[:space:]]*=&#x27; \
+param.nml
+
+RNDAY=$(awk -F= &#x27;
+    /^[[:space:]]*rnday[[:space:]]*=/ {
+        value=$2
+        sub(/!.*/, &quot;&quot;, value)
+        gsub(/[[:space:]]/, &quot;&quot;, value)
+        print value
+        exit
+    }
+&#x27; param.nml)
+
+if [ &quot;$RNDAY&quot; != &quot;6&quot; ] &amp;&amp; [ &quot;$RNDAY&quot; != &quot;6.0&quot; ]; then
+    echo &quot;ERROR: this is not the full six-day case. rnday=$RNDAY&quot;
+    exit 8
+fi
+
+echo
+echo &quot;===== ABSOLUTE PATH AUDIT =====&quot;
+grep -nE \
+&#x27;/home/uqdliu17|/QRISdata|/scratch/uq|/proj/uq&#x27; \
+param.nml aed.nml sflux/sflux_inputs.txt || \
+echo &quot;OK: no Bunya-specific absolute paths found in primary configuration files.&quot;
+
+echo
+echo &quot;===== EXECUTABLE LIBRARY CHECK =====&quot;
+if ldd &quot;$EXE&quot; | grep -q &quot;not found&quot;; then
+    echo &quot;ERROR: executable has missing libraries.&quot;
+    ldd &quot;$EXE&quot; | grep &quot;not found&quot;
+    exit 9
+else
+    echo &quot;OK: all executable libraries are available.&quot;
+fi
+
+echo
+echo &quot;===== PREPARE CLEAN OUTPUTS =====&quot;
+mkdir -p outputs
+find outputs -mindepth 1 -maxdepth 1 -exec rm -rf {} +
+touch outputs/flux.out
+
+rm -f \
+    &quot;$LOG&quot; \
+    fatal.error \
+    mirror.out \
+    fort.*
+
+echo
+echo &quot;===== START SCHISM-AED =====&quot;
+echo &quot;Start time: $(date)&quot;
+
+{
+    echo
+    echo
+    echo &quot;NEW ATHENA RUN&quot;
+    echo &quot;Run started at $(date)&quot;
+    echo &quot;PBS job ID: ${PBS_JOBID:-N/A}&quot;
+} &gt; &quot;$LOG&quot;
+
+mpiexec -np &quot;$NPROC&quot; &quot;$EXE&quot; &quot;$NSCRIBE&quot; &gt;&gt; &quot;$LOG&quot; 2&gt;&amp;1
+run_status=$?
+
+echo
+echo &quot;===== MPI FINISHED =====&quot;
+echo &quot;Exit code: $run_status&quot;
+echo &quot;End time : $(date)&quot;
+
+if [ -s fatal.error ]; then
+    echo
+    echo &quot;===== FATAL.ERROR =====&quot;
+    cat fatal.error
+    run_status=1
+fi
+
+if strings &quot;$LOG&quot; | grep -qi &quot;ABORT&quot;; then
+    echo
+    echo &quot;===== ABORT FOUND IN LOG =====&quot;
+    strings &quot;$LOG&quot; |
+        grep -i -B10 -A20 &quot;ABORT&quot; |
+        tail -120
+    run_status=1
+fi
+
+echo
+echo &quot;===== OUTPUT SUMMARY =====&quot;
+find outputs -maxdepth 1 -type f -printf &quot;%f %s bytes\n&quot; |
+    sort |
+    tail -50
+
+echo
+echo &quot;===== LOG TAIL =====&quot;
+tail -100 &quot;$LOG&quot;
+
+echo
+echo &quot;============================================================&quot;
+echo &quot;Final status: $run_status&quot;
+echo &quot;Finished at : $(date)&quot;
+echo &quot;============================================================&quot;
+
+exit &quot;$run_status&quot;
+</code></pre>
+</details>
+
+<h3>5.1 Submit and monitor</h3>
+<pre><code>cd /scratch/catchmodel/liud1/schism_aed_runs/spoon_sczaed_compare_6day_fullvars_athena_test
+
+bash -n run_spoon_sczaed_6day_athena.pbs
+qsub run_spoon_sczaed_6day_athena.pbs
+
+qstat -u &quot;$USER&quot;
+qstat -f 9793284.athena</code></pre>
+<p><code>Q</code> means queued, <code>R</code> means running and <code>E</code> means exiting. A one-node 64-CPU request may wait until a suitable node is available; this is a scheduling issue rather than a SCHISM performance issue.</p>
+</section>
+
+<section id="validation">
+<h2>6. Runtime validation and checks</h2>
+<p>The full case was treated as successful only after the following checks:</p>
+<div class="grid">
+<div class="card"><strong>MPI completion</strong>The PBS job and <code>mpiexec</code> returned successfully.</div>
+<div class="card"><strong>No fatal model error</strong>No non-empty <code>fatal.error</code> and no <code>ABORT</code> marker in the SCHISM-AED log.</div>
+<div class="card"><strong>Output production</strong>SCHISM hydrodynamic and AED outputs were created under <code>outputs/</code>.</div>
+<div class="card"><strong>Environment linkage</strong><code>ldd</code> reported no missing NetCDF, HDF5, Intel MPI or GCC runtime libraries.</div>
+</div>
+<pre><code>cd /scratch/catchmodel/liud1/schism_aed_runs/spoon_sczaed_compare_6day_fullvars_athena_test
+
+tail -100 schism_athena.log
+test -s fatal.error &amp;&amp; cat fatal.error
+grep -i -B5 -A10 &quot;ABORT&quot; schism_athena.log
+find outputs -maxdepth 1 -type f -printf &quot;%f %s bytes
+&quot; | sort</code></pre>
+<div class="callout success"><strong>Final conclusion:</strong> the successful six-day Spoon Estuary simulation confirms that the compiled SCHISM-AED executable is operational on Athena, not merely compilable.</div>
+</section>
+
+<section id="troubleshooting">
+<h2>7. Troubleshooting summary</h2>
+<table>
+<tr><th>Symptom</th><th>Likely cause</th><th>Action</th></tr>
+<tr><td><code>salloc</code>, <code>sbatch</code> or <code>srun</code> not found</td><td>Athena uses PBS rather than Slurm</td><td>Use <code>qsub</code>, <code>qstat</code>, <code>qdel</code> and <code>mpiexec</code>.</td></tr>
+<tr><td><code>ompi_info</code> not found</td><td>Athena provides Intel MPI</td><td>Use the <code>I_MPI_ROOT</code>-aware build patch.</td></tr>
+<tr><td>Wrong SCHISM commit</td><td>The first source fetch did not complete the expected checkout</td><td>Run <code>./fetch_sources.sh schism</code> again and verify the hash.</td></tr>
+<tr><td><code>Cannot rename netcdf_var_names.mod0</code></td><td>Parallel utility build race</td><td>Clean the listed module products and rebuild the utility targets with <code>-j1</code>.</td></tr>
+<tr><td><code>ldd</code> reports “not found”</td><td>The Athena environment was not loaded</td><td>Source <code>load_athena_env.sh</code> inside the PBS job.</td></tr>
+<tr><td>Job remains in <code>Q</code></td><td>The CPU or memory request routes the job to a constrained queue</td><td>Inspect the PBS job comment and queue. For this case, the validated request used 64 MPI ranks and 20 GB rather than 64 GB.</td></tr>
+<tr><td>Windows SMB upload is denied</td><td>SMB identity mapping differs from Linux ownership</td><td>Upload with <code>scp</code> from PowerShell.</td></tr>
+</table>
+</section>
+</main>
+
+<footer>
+<p><strong>Prepared by Dongfang Liu, Badin Gibbes and Aditya Singh</strong></p>
+<p>DETSI catchmodel project · Updated 16 July 2026</p>
+</footer>
+</body>
+</html>
