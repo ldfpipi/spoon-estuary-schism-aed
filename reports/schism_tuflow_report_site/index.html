@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Spoon Estuary | SCHISM–AED and TUFLOW FV–AED Aligned Comparison</title>
+<style>
+:root{--ink:#142033;--muted:#64748b;--line:#dbe3ec;--bg:#f5f8fb;--card:#fff;--blue:#0b6aa2;--teal:#0f766e;--amber:#b45309;--red:#b42318;--green:#18794e}
+*{box-sizing:border-box} html{scroll-behavior:smooth} body{margin:0;font-family:Inter,Segoe UI,Arial,sans-serif;background:var(--bg);color:var(--ink);line-height:1.58}
+a{color:var(--blue);text-decoration:none} a:hover{text-decoration:underline}
+.hero{background:linear-gradient(135deg,#072f4a,#0b6aa2 58%,#0f766e);color:white;padding:64px 24px 52px}
+.wrap{max-width:1220px;margin:auto}.eyebrow{font-size:.78rem;letter-spacing:.13em;text-transform:uppercase;font-weight:700;opacity:.82}.hero h1{font-size:clamp(2rem,4.5vw,4rem);line-height:1.08;margin:.5rem 0 1rem;max-width:1000px}.hero p{max-width:880px;font-size:1.08rem;opacity:.92}.meta{display:flex;gap:12px;flex-wrap:wrap;margin-top:22px}.pill{border:1px solid rgba(255,255,255,.35);border-radius:999px;padding:7px 12px;font-size:.85rem;background:rgba(255,255,255,.08)}
+nav{position:sticky;top:0;z-index:10;background:rgba(255,255,255,.96);border-bottom:1px solid var(--line);backdrop-filter:blur(10px)}nav .wrap{display:flex;gap:18px;overflow:auto;padding:12px 20px;font-size:.9rem;font-weight:650;white-space:nowrap}
+main{padding:34px 22px 70px} section{scroll-margin-top:70px;margin:0 auto 44px;max-width:1220px}.section-title{font-size:1.65rem;margin:0 0 8px}.lead{color:#42526a;max-width:980px;margin-top:0}
+.notice{border-left:4px solid var(--amber);background:#fff7ed;padding:14px 17px;border-radius:6px;margin:18px 0}.notice strong{color:#8a3f06}
+.grid{display:grid;gap:18px}.cards{grid-template-columns:repeat(auto-fit,minmax(250px,1fr))}.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:20px;box-shadow:0 3px 14px rgba(15,23,42,.04)}.card h3{margin:0 0 8px;font-size:1.02rem}.card p{margin:0;color:#526176;font-size:.94rem}
+.status{display:inline-flex;align-items:center;border-radius:999px;padding:4px 9px;font-size:.76rem;font-weight:750;margin-bottom:10px}.same{background:#dcfce7;color:#166534}.partial{background:#fef3c7;color:#92400e}.different{background:#fee2e2;color:#991b1b}.verified{background:#dbeafe;color:#1e40af}
+.table-wrap{overflow:auto;background:white;border:1px solid var(--line);border-radius:12px}table{border-collapse:collapse;width:100%;min-width:880px}th,td{text-align:left;padding:13px 14px;border-bottom:1px solid var(--line);vertical-align:top;font-size:.91rem}th{background:#eef4f8;font-size:.8rem;text-transform:uppercase;letter-spacing:.05em}tr:last-child td{border-bottom:none}
+.figure-pair{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin:18px 0 30px}.figure-single{margin:18px 0 30px}.figure{background:#fff;border:1px solid var(--line);border-radius:12px;overflow:hidden}.figure img{width:100%;display:block;background:white}.caption{padding:13px 15px;color:#4b5b70;font-size:.89rem;border-top:1px solid var(--line)}.caption b{color:#1f2d3d}.tag{display:inline-block;padding:2px 7px;border-radius:999px;background:#edf2f7;font-size:.74rem;font-weight:700;margin-right:6px}
+.findings{counter-reset:item}.finding{display:grid;grid-template-columns:42px 1fr;gap:12px;padding:16px 0;border-bottom:1px solid var(--line)}.finding:last-child{border-bottom:none}.num{height:32px;width:32px;border-radius:50%;background:#dbeafe;color:#1d4ed8;display:grid;place-items:center;font-weight:800}.finding h3{margin:0 0 4px;font-size:1rem}.finding p{margin:0;color:#526176}
+.code{background:#0f172a;color:#e2e8f0;border-radius:10px;padding:16px;overflow:auto;font:13px/1.55 Consolas,monospace}
+footer{background:#0f172a;color:#cbd5e1;padding:28px 22px}footer .wrap{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap}footer b{color:white}
+@media(max-width:760px){.figure-pair{grid-template-columns:1fr}.hero{padding-top:45px}.hero h1{font-size:2.25rem}}
+</style>
+</head>
+<body>
+<header class="hero"><div class="wrap">
+<div class="eyebrow">Spoon Estuary multi-model benchmark</div>
+<h1>SCHISM–AED and TUFLOW FV–AED aligned comparison</h1>
+<p>A standalone technical report documenting the alignment process, the remaining model differences, and the preliminary comparison of hydrodynamic and water-quality outputs after the SCHISM case was configured to reproduce the TUFLOW boundary and forcing setup as closely as practicable.</p>
+<div class="meta"><span class="pill">Prepared by Dongfang Liu, Badin Gibbes and Aditya Singh</span><span class="pill">Case: tuflow_hmatch_noramp</span><span class="pill">Preliminary diagnostic comparison</span></div>
+</div></header>
+<nav><div class="wrap"><a href="#scope">Scope</a><a href="#alignment">Alignment audit</a><a href="#results">Result comparison</a><a href="#limitations">Limitations</a><a href="#conclusions">Conclusions</a><a href="#methods">Reproducibility</a></div></nav>
+<main>
+<section id="scope"><h2 class="section-title">1. Scope and purpose</h2><p class="lead">This report separates two questions that must not be conflated: first, whether the two models were supplied with sufficiently comparable geometry, boundary conditions, forcing and output settings; and second, how their numerical results compare after that alignment. The figures were assembled from the current comparison package supplied for this report.</p>
+<div class="notice"><strong>Interpretation rule.</strong> A visually similar map does not by itself prove model equivalence. Conversely, a visible difference does not automatically indicate an error: SCHISM and TUFLOW FV use different numerical formulations, vertical coordinates, wetting/drying treatments and AED coupling implementations.</div>
+<div class="grid cards">
+<div class="card"><span class="status verified">Question A</span><h3>What was made consistent?</h3><p>Horizontal domain, bathymetry source, upstream discharge, downstream water level, atmospheric forcing, comparison period, water-quality variable selection and plotting conventions.</p></div>
+<div class="card"><span class="status partial">Question B</span><h3>What remains structurally different?</h3><p>Native mesh representation, vertical discretisation, solver numerics, wetting/drying, diagnostic-variable implementation and some time stamps in the current figure set.</p></div>
+<div class="card"><span class="status different">Question C</span><h3>Which outputs are not yet reliable?</h3><p>PAR, total light and GPP are zero throughout the SCHISM–AED run despite non-zero shortwave forcing; these diagnostics require interface/configuration investigation before scientific comparison.</p></div>
+</div></section>
+
+<section id="alignment"><h2 class="section-title">2. Alignment audit: same, partially same, and different</h2><p class="lead">The table below records the outcome of the step-by-step setup audit completed before interpreting output differences.</p>
+<div class="table-wrap"><table><thead><tr><th>Component</th><th>Status</th><th>What is aligned</th><th>What remains different / note</th></tr></thead><tbody>
+<tr><td><b>Horizontal domain</b></td><td><span class="status same">Aligned</span></td><td>SCHISM domain converted from the same Spoon Estuary TUFLOW mesh source and covers the same estuary footprint, including the island and downstream channel.</td><td>SCHISM stores 1,419 nodes and 1,375 polygonal faces; plotting triangulates the polygons into 2,535 triangles. Native connectivity and control-volume formulation therefore differ.</td></tr>
+<tr><td><b>Bathymetry</b></td><td><span class="status same">Source aligned</span></td><td>Depths originate from the TUFLOW mesh/bathymetry used for the benchmark.</td><td>Cell-centre versus node/element interpolation and wet/dry handling can introduce local differences.</td></tr>
+<tr><td><b>Open boundaries</b></td><td><span class="status same">Aligned</span></td><td>Ocean boundary uses the TUFLOW downstream water-level series; river boundary uses the TUFLOW upstream discharge series. SCHISM boundary-node ordering was explicitly checked.</td><td>Boundary enforcement differs numerically between solvers.</td></tr>
+<tr><td><b>Boundary ramping</b></td><td><span class="status same">Aligned for case</span></td><td>The comparison case uses the no-ramp configuration to avoid an artificial start-up mismatch.</td><td>Initial transient response can still differ because the models initialise and stabilise differently.</td></tr>
+<tr><td><b>Meteorological forcing</b></td><td><span class="status same">Aligned source</span></td><td>CFSR atmospheric forcing is applied over the same period. Downward shortwave radiation is present and non-zero.</td><td>Host-model-to-AED transfer pathways are not necessarily identical.</td></tr>
+<tr><td><b>Simulation/output timing</b></td><td><span class="status partial">Partially aligned</span></td><td>Common comparison window and hourly output were targeted.</td><td>The first saved SCHISM field is at 01:00 whereas a TUFLOW reference panel is labelled 00:00. Several supplied panels also use different timestamps; these must be matched before quantitative statistics.</td></tr>
+<tr><td><b>Vertical representation</b></td><td><span class="status different">Different</span></td><td>Both represent the full water column and permit surface, near-bed and depth-averaged diagnostics.</td><td>SCHISM uses a 14-level SZ grid; TUFLOW uses its own layer-face formulation. “Top layer”, “bottom layer” and depth averaging are not numerically identical operations.</td></tr>
+<tr><td><b>Water-quality state variables</b></td><td><span class="status partial">Partially aligned</span></td><td>Core variables including oxygen, TN, TP, TSS and chlorophyll-a are available in both model systems and can be compared after consistent unit conversion and vertical treatment.</td><td>Variable names, native units, vertical representations and some diagnostic implementations differ between the TUFLOW FV–AED and SCHISM–AED host interfaces.</td></tr>
+<tr><td><b>Light / primary production</b></td><td><span class="status different">Inactive in current SCHISM–AED run</span></td><td>Atmospheric shortwave forcing is present and non-zero, and light-related output was enabled. However, <code>TOT_par</code>, <code>TOT_light</code> and <code>PHY_gpp</code> remain zero throughout the simulation.</td><td>This is not currently attributed to missing input from the TUFLOW case. The evidence instead suggests that the solar-radiation transfer into AED, the SCHISM–AED light linkage, or the associated diagnostic/process configuration is inactive or unsupported and requires further investigation.</td></tr>
+<tr><td><b>Transect geometry</b></td><td><span class="status same">Exact source used</span></td><td>Curtain comparisons use Matt’s original <code>polyline.csv</code>, not a hand-drawn centreline. The mapped SCHISM transect is about 13.64 km long.</td><td>Sampling requires mapping the polyline to the nearest SCHISM wet faces, so exact section cells still differ.</td></tr>
+</tbody></table></div>
+</section>
+
+<section id="results"><h2 class="section-title">3. Preliminary result comparison</h2><p class="lead">The figures below reproduce the supplied comparison package. They are diagnostic rather than a final skill assessment. Captions distinguish direct comparisons from examples affected by unequal timestamps or non-functional diagnostics.</p>
+
+<h3>3.1 Water-surface elevation</h3>
+<div class="figure-pair"><figure class="figure"><img src="assets/figures/image1.png" alt="TUFLOW water surface elevation"><figcaption class="caption"><span class="tag">TUFLOW</span><b>2011-05-01 00:00.</b> Spatial water-surface-elevation structure across the full domain.</figcaption></figure><figure class="figure"><img src="assets/figures/image2.png" alt="SCHISM water surface elevation"><figcaption class="caption"><span class="tag">SCHISM</span><b>2011-05-01 01:00.</b> The broad spatial pattern is comparable, but this is not an exact-time comparison. The first-output offset must be resolved before calculating map differences.</figcaption></figure></div>
+
+<h3>3.2 Dissolved oxygen</h3>
+<div class="figure-pair"><figure class="figure"><img src="assets/figures/image3.png" alt="TUFLOW oxygen"><figcaption class="caption"><span class="tag">TUFLOW</span><b>Oxygen at 2011-05-02 02:00.</b> Reference colour range 0–10 mg/L.</figcaption></figure><figure class="figure"><img src="assets/figures/image4.png" alt="SCHISM oxygen"><figcaption class="caption"><span class="tag">SCHISM</span><b>Oxygen at the same time.</b> AED <code>OXY_oxy</code> was converted from mmol O₂ m⁻³ to mg O₂ L⁻¹ using ×0.032. The SCHISM field is approximately 4.8–7.9 mg/L and shows a similar downstream gradient, but lower contrast than the unconverted native field.</figcaption></figure></div>
+
+<h3>3.3 Oxygen, total nitrogen and GPP</h3>
+<div class="figure-pair"><figure class="figure"><img src="assets/figures/image5.png" alt="TUFLOW OXY TN GPP"><figcaption class="caption"><span class="tag">TUFLOW</span>Reference three-panel presentation and fixed colour scales.</figcaption></figure><figure class="figure"><img src="assets/figures/image6.png" alt="SCHISM OXY TN GPP"><figcaption class="caption"><span class="tag">SCHISM</span>Oxygen is physically interpretable after conversion. TN strongly exceeds the narrow TUFLOW scale in parts of the domain. GPP is zero because <code>PHY_gpp</code> is zero throughout the current run; it should not be interpreted as a real productivity result.</figcaption></figure></div>
+
+<h3>3.4 Velocity, TSS and TP at three depth treatments</h3>
+<div class="figure-pair"><figure class="figure"><img src="assets/figures/image7.png" alt="TUFLOW 3 by 3"><figcaption class="caption"><span class="tag">TUFLOW</span>Surface 1 m, near-seabed 1 m and depth-averaged fields.</figcaption></figure><figure class="figure"><img src="assets/figures/image8.png" alt="SCHISM 3 by 3"><figcaption class="caption"><span class="tag">SCHISM</span>Surface valid layer, bottom valid layer and full-column mean. Speed is generally within the reference range. TSS and TP frequently saturate the fixed TUFLOW colour limits, indicating either substantial state-variable differences, initial-condition differences, or remaining unit/composition differences that require point-by-point audit.</figcaption></figure></div>
+
+<h3>3.5 Point time series</h3>
+<div class="figure-pair"><figure class="figure"><img src="assets/figures/image9.png" alt="TUFLOW TSS time series"><figcaption class="caption"><span class="tag">TUFLOW</span>Reference P2-style TSS time series, increasing to roughly 1 in the plotted diagnostic units.</figcaption></figure><figure class="figure"><img src="assets/figures/image10.png" alt="SCHISM TSS time series"><figcaption class="caption"><span class="tag">SCHISM</span>Extracted TSS increases from roughly 3 to 18 mg/L late in the run. The magnitude and timing differ strongly; the point coordinates, vertical sampling method and exact TUFLOW diagnostic definition must be identical before attributing this to model physics.</figcaption></figure></div>
+
+<h3>3.6 Oxygen map and curtain</h3>
+<div class="figure-pair"><figure class="figure"><img src="assets/figures/image11.png" alt="TUFLOW oxygen map and curtain"><figcaption class="caption"><span class="tag">TUFLOW</span>Depth-averaged map and curtain along Matt’s <code>polyline.csv</code>.</figcaption></figure><figure class="figure"><img src="assets/figures/image12.png" alt="SCHISM oxygen map and curtain"><figcaption class="caption"><span class="tag">SCHISM</span>Matched transect and 2011-05-02 12:00 output. The SCHISM field is more vertically uniform and concentrated around 6–8 mg/L. Remaining differences may reflect vertical-grid resolution, mixing, boundary/initial states and AED coupling.</figcaption></figure></div>
+
+<h3>3.7 Density curtain</h3>
+<div class="figure-pair"><figure class="figure"><img src="assets/figures/image13.png" alt="TUFLOW density curtain"><figcaption class="caption"><span class="tag">TUFLOW</span>Reference density curtain, 1000–1025 kg m⁻³.</figcaption></figure><figure class="figure"><img src="assets/figures/image14.png" alt="SCHISM density curtain"><figcaption class="caption"><span class="tag">SCHISM</span>Density calculated from SCHISM temperature and salinity. SCHISM appears fresher/lower-density over much of the section and shows a different longitudinal gradient. This is a key hydrodynamic discrepancy for follow-up.</figcaption></figure></div>
+
+<h3>3.8 PAR and light-related diagnostics</h3>
+<div class="figure-pair"><figure class="figure"><img src="assets/figures/image15.png" alt="TUFLOW PAR curtain"><figcaption class="caption"><span class="tag">TUFLOW</span>Non-zero PAR structure through the water column.</figcaption></figure><figure class="figure"><img src="assets/figures/image16.png" alt="SCHISM PAR curtain"><figcaption class="caption"><span class="tag">SCHISM</span><code>TOT_par</code> is zero throughout the run. Together with zero <code>TOT_light</code> and <code>PHY_gpp</code>, this confirms that the current light/productivity pathway is not operational and the panel is a diagnostic failure, not a physical result.</figcaption></figure></div>
+</section>
+
+<section id="limitations"><h2 class="section-title">4. Current limitations and required checks</h2><div class="card findings">
+<div class="finding"><div class="num">1</div><div><h3>Match timestamps before any error metric</h3><p>Several current panels compare 00:00 with 01:00, or use different dates. The next package should produce paired outputs from one shared list of exact timestamps.</p></div></div>
+<div class="finding"><div class="num">2</div><div><h3>Use one station definition</h3><p>P1/P2 coordinates have varied across notebook examples. Store one authoritative station table and use the same horizontal face, vertical interpolation and depth convention in both models.</p></div></div>
+<div class="finding"><div class="num">3</div><div><h3>Resolve light transfer before GPP interpretation</h3><p>Atmospheric <code>dswrf</code> is non-zero, yet <code>TOT_par</code>, <code>TOT_light</code> and <code>PHY_gpp</code> are identically zero. Investigate the SCHISM–AED host linkage, light input flags, diagnostic implementation and phytoplankton configuration.</p></div></div>
+<div class="finding"><div class="num">4</div><div><h3>Audit TN, TP and TSS composition</h3><p>Correct molecular conversions do not guarantee that aggregated diagnostic definitions are identical. Confirm which dissolved, particulate, refractory and phytoplankton pools are included in each host’s TOT variables.</p></div></div>
+<div class="finding"><div class="num">5</div><div><h3>Quantify rather than rely on colour saturation</h3><p>Produce common-grid difference maps, station RMSE/bias/correlation, vertical-profile errors and volume-integrated inventories using physically meaningful wet-cell masks.</p></div></div>
+</div></section>
+
+<section id="conclusions"><h2 class="section-title">5. Conclusions</h2><div class="grid cards">
+<div class="card"><span class="status same">Achieved</span><h3>Boundary and forcing alignment</h3><p>The comparison case now uses the TUFLOW upstream discharge, downstream water level, common atmospheric source, no-ramp setup and exact curtain polyline. The two models are therefore substantially better aligned than the initial benchmark.</p></div>
+<div class="card"><span class="status partial">Preliminary</span><h3>Hydrodynamic consistency</h3><p>Domain-scale patterns are recognisably comparable, but density, velocity and first-output timing differences remain. A formal matched-time hydrodynamic validation is still required.</p></div>
+<div class="card"><span class="status different">Unresolved</span><h3>Biogeochemical consistency</h3><p>Oxygen can be compared after unit conversion. TN, TP and TSS show large magnitude differences, while light and GPP diagnostics are non-functional in the current SCHISM–AED run.</p></div>
+</div></section>
+
+<section id="methods"><h2 class="section-title">6. Reproducibility and publishing</h2><p class="lead">This page is intentionally self-contained in a new subdirectory. Uploading it will not modify or replace the existing GitHub Pages report.</p>
+<div class="code">Recommended repository location:
+reports/schism_tuflow_aligned_comparison/
+├── index.html
+└── assets/
+    └── figures/
+
+Public URL after upload:
+https://ldfpipi.github.io/spoon-estuary-schism-aed/reports/schism_tuflow_aligned_comparison/</div>
+<div class="notice"><strong>Versioning recommendation.</strong> Keep this as a dated preliminary report and add later matched-time statistics as a new version. Do not overwrite the existing <code>spoon_estuary_github_report_readable</code> directory.</div></section>
+</main>
+<footer><div class="wrap"><div><b>Spoon Estuary SCHISM–AED</b><br/>Aligned multi-model benchmark report</div><div>Prepared by Dongfang Liu, Badin Gibbes and Aditya Singh</div></div></footer>
+</body></html>
