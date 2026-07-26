@@ -1,0 +1,94 @@
+===== SAME-COORDINATE OCEAN SEGMENTS =====
+
+Positive normal velocity means movement from the Ocean boundary into the model domain.
+
+Segment 1
+  Boundary edge: 1402 -> 1408
+  Element ID: 1362
+  TUFLOW cell number: 1362
+  Exact coordinate: (159.0756337406, -31.3580910955)
+  Segment length: 75.526787 m
+  Inward normal: (0.4146341082, -0.9099882177)
+  SCHISM node IDs: [1402, 1408, 1401, 1395]
+  SCHISM interpolation weights: [0.2510236935, 0.2510601476, 0.2489761552, 0.2489400037]
+  Interpolation method: quadrilateral bilinear (xi=0.00007261, eta=-0.00416768)
+  TUFLOW bed z: -1.76917350 m
+  SCHISM bed z: -1.76968404 m
+  Common bed z: -1.76942877 m
+  Bed difference: -0.00051054 m
+
+Segment 2
+  Boundary edge: 1408 -> 1413
+  Element ID: 1367
+  TUFLOW cell number: 1367
+  Exact coordinate: (159.0749194015, -31.3583710132)
+  Segment length: 75.617691 m
+  Inward normal: (0.4142818380, -0.9101486465)
+  SCHISM node IDs: [1408, 1413, 1407, 1401]
+  SCHISM interpolation weights: [0.2510698284, 0.2511213928, 0.2489299466, 0.2488788322]
+  Interpolation method: quadrilateral bilinear (xi=0.00010268, eta=-0.00438244)
+  TUFLOW bed z: -3.74974680 m
+  SCHISM bed z: -3.74970055 m
+  Common bed z: -3.74972368 m
+  Bed difference: 0.00004625 m
+
+Segment 3
+  Boundary edge: 1413 -> 1417
+  Element ID: 1371
+  TUFLOW cell number: 1371
+  Exact coordinate: (159.0742051648, -31.3586511256)
+  Segment length: 75.526410 m
+  Inward normal: (0.4146361777, -0.9099872747)
+  SCHISM node IDs: [1413, 1417, 1412, 1407]
+  SCHISM interpolation weights: [0.2510227469, 0.2510586293, 0.2489771044, 0.2489415195]
+  Interpolation method: quadrilateral bilinear (xi=0.00007147, eta=-0.00416275)
+  TUFLOW bed z: -4.95049810 m
+  SCHISM bed z: -4.95015292 m
+  Common bed z: -4.95032551 m
+  Bed difference: 0.00034518 m
+
+Segment 4
+  Boundary edge: 1417 -> 1419
+  Element ID: 1374
+  TUFLOW cell number: 1374
+  Exact coordinate: (159.0734911308, -31.3589311086)
+  Segment length: 75.526222 m
+  Inward normal: (0.4146372123, -0.9099868033)
+  SCHISM node IDs: [1417, 1419, 1416, 1412]
+  SCHISM interpolation weights: [0.2510284174, 0.2510570947, 0.2489714635, 0.2489430244]
+  Interpolation method: quadrilateral bilinear (xi=0.00005712, eta=-0.00417102)
+  TUFLOW bed z: -6.04770947 m
+  SCHISM bed z: -6.04724918 m
+  Common bed z: -6.04747932 m
+  Bed difference: 0.00046029 m
+
+Segment 5
+  Boundary edge: 1419 -> 1418
+  Element ID: 1375
+  TUFLOW cell number: 1375
+  Exact coordinate: (159.0727767800, -31.3592110427)
+  Segment length: 75.617125 m
+  Inward normal: (0.4142849406, -0.9101472342)
+  SCHISM node IDs: [1419, 1418, 1414, 1416]
+  SCHISM interpolation weights: [0.2510616459, 0.2511201888, 0.2489380997, 0.2488800655]
+  Interpolation method: quadrilateral bilinear (xi=0.00011658, eta=-0.00436367)
+  TUFLOW bed z: -6.38836575 m
+  SCHISM bed z: -6.38878457 m
+  Common bed z: -6.38857516 m
+  Bed difference: -0.00041882 m
+
+Segment 6
+  Boundary edge: 1418 -> 1415
+  Element ID: 1373
+  TUFLOW cell number: 1373
+  Exact coordinate: (159.0720625542, -31.3594911378)
+  Segment length: 75.525845 m
+  Inward normal: (0.4146392819, -0.9099858603)
+  SCHISM node IDs: [1418, 1415, 1410, 1414]
+  SCHISM interpolation weights: [0.2510276679, 0.2510564745, 0.2489722125, 0.248943645]
+  Interpolation method: quadrilateral bilinear (xi=0.00005737, eta=-0.00416828)
+  TUFLOW bed z: -3.95360255 m
+  SCHISM bed z: -3.95480651 m
+  Common bed z: -3.95420453 m
+  Bed difference: -0.00120395 m
+

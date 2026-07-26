@@ -1,0 +1,41 @@
+﻿===== GRID COMPARISON =====
+TUFLOW grid : D:\SCHISM_W9\TUFLOWFV_Tutorial_M05\Tutorial_Module_05_Estuary_Module\Complete_Model\TUFLOWFV\model\geo\hydraul_006.2dm
+SCHISM grid : R:\Estuary_SCHISM-Q8213\9.0 Developed models\Dongfang_SCHISM_TEST\spoon_estuary_multi_model\schism_tutorial_m05_benchmark\hgrid.gr3
+SCHISM title: Spoon Estuary TUFLOW-matched mixed-element mesh
+
+===== COUNTS =====
+TUFLOW nodes          : 1419
+SCHISM nodes          : 1419
+TUFLOW elements       : 1375
+SCHISM elements       : 1375
+TUFLOW triangles/quads: 215 / 1160
+SCHISM triangles/quads: 215 / 1160
+
+===== NODE IDS =====
+Common node IDs      : 1419
+Missing from SCHISM  : 0
+Extra in SCHISM      : 0
+
+===== COORDINATES =====
+Maximum absolute X difference: 0.000000000000E+000
+Maximum absolute Y difference: 0.000000000000E+000
+
+===== DEPTHS =====
+Direct RMS difference       : 7.023834560085E+000
+Direct maximum difference   : 2.898051700000E+001
+Sign-flipped RMS difference : 1.341887847867E-009
+Sign-flipped maximum diff.  : 5.000000025124E-009
+Best depth convention       : 
+
+===== CONNECTIVITY =====
+TUFLOW elements missing from SCHISM: 0
+SCHISM elements absent from TUFLOW : 0
+
+===== FINAL RESULT =====
+Same counts       : True
+Same node IDs     : True
+Same coordinates  : True
+Same depths       : True
+Same connectivity : True
+
+PASS: hydraul_006.2dm and SCHISM hgrid.gr3 are an exact mesh match.

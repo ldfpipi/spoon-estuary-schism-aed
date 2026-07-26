@@ -1,0 +1,102 @@
+===== FINAL LOWER-MIDDLE-UPPER COMPARISON =====
+TUFLOW file: D:\SCHISM_W9\TUFLOWFV_Tutorial_M05\Tutorial_Module_05_Estuary_Module\Complete_Model\TUFLOWFV\results\HYD_002_W.nc
+SCHISM outputs: C:\Users\uqdliu17\Documents\schism_tutorial_m05_benchmark\outputs
+SCHISM hgrid title: Spoon Estuary TUFLOW-matched mixed-element mesh
+
+Location names: Lower, Middle and Upper
+Vertical velocity display name: Vz (raw TUFLOW W; raw SCHISM verticalVelocity)
+Figure legends were placed below the plotting axes to avoid obscuring the time-series data.
+
+Comparison start: 2011-05-01 01:00:00
+Comparison end  : 2011-05-07 00:00:00
+Common records : 144
+
+Vertical comparison method:
+  Common reference water surface = 0.5 * (TUFLOW water level + SCHISM water level)
+  Surface      = reference surface - 0.500 m
+  Mid-depth    = midpoint between reference surface and bed elevation
+  Near-bottom  = bed elevation + 0.500 m
+
+Difference convention:
+  Difference = SCHISM - TUFLOW
+
+Vertical velocity sign:
+  Raw TUFLOW variable W and raw SCHISM variable verticalVelocity were displayed as Vz and compared without sign reversal.
+
+===== HORIZONTAL INTERPOLATION =====
+
+Location: Lower
+  Element ID: 1359
+  Node IDs: [1399, 1405, 1398, 1392]
+  Weights: [0.2510930021, 0.2511477696, 0.2489067535, 0.2488524747]
+  Method: quadrilateral bilinear (xi=0.000109, eta=-0.004482)
+
+Location: Middle
+  Element ID: 681
+  Node IDs: [734, 727, 718, 732]
+  Weights: [0.2510628555, 0.2517834607, 0.2489330656, 0.2482206182]
+  Method: quadrilateral bilinear (xi=0.001433, eta=-0.005693)
+
+Location: Upper
+  Element ID: 113
+  Node IDs: [133, 123, 114, 124]
+  Weights: [0.2507442626, 0.2492511579, 0.2492557237, 0.2507488558]
+  Method: quadrilateral bilinear (xi=-0.002986, eta=0.000009)
+
+===== COMPARISON METRICS =====
+
+location    variable       level   n  bias_schism_minus_tuflow           mae          rmse  maximum_absolute_error  correlation  minimum_schism_valid_nodes  maximum_schism_valid_nodes
+   Lower    Salinity   Mid-depth 144                 -7.860954      7.860954     10.312329               24.533963   0.55539857                           4                           4
+   Lower    Salinity Near-bottom 144                -7.4603416     7.4603416     10.258155               24.929062   0.25781306                           2                           2
+   Lower    Salinity     Surface 144                 4.2335737     6.9774664     8.2651001               20.819079   0.22823857                           4                           4
+   Lower Temperature   Mid-depth 144                -1.0288576     1.0288576     1.5861496               5.1219449   0.72238851                           4                           4
+   Lower Temperature Near-bottom 144               -0.98676475    0.98676475     1.5885405               5.2154267 -0.044168538                           2                           2
+   Lower Temperature     Surface 144                 1.1895861     1.3123025     1.6528777               3.5011186   0.51397186                           4                           4
+   Lower          Vx   Mid-depth 144              -0.024916216   0.025056158   0.031402923              0.14319375    0.7470371                           4                           4
+   Lower          Vx Near-bottom 144              -0.015555703   0.031367872   0.036572029              0.10740805   0.52232958                           2                           2
+   Lower          Vx     Surface 144               0.068077072   0.068077072    0.07061422              0.14178739   0.74783747                           4                           4
+   Lower          Vy   Mid-depth 144               0.097957605   0.097957605    0.10771859              0.36413212   0.60966073                           4                           4
+   Lower          Vy Near-bottom 144               0.013192485   0.030312555   0.045039973              0.22907995   0.57840929                           2                           2
+   Lower          Vy     Surface 144               -0.15847772    0.15847772    0.16542607               0.3988122   0.83328487                           4                           4
+   Lower          Vz   Mid-depth 144             -9.625496e-05 0.00022501839 0.00027077831           0.00051710751   0.38233309                           4                           4
+   Lower          Vz Near-bottom 144             9.8680222e-05 0.00011087033 0.00012914281           0.00023559798  -0.60671103                           2                           2
+   Lower          Vz     Surface 144             2.7818293e-05 0.00010185469 0.00011853223           0.00023864427   0.15999059                           4                           4
+   Lower Water level          2D 144              0.0082286152   0.010238145   0.014173581             0.031279089   0.99548988                           4                           4
+  Middle    Salinity   Mid-depth 144                -15.340235     15.340235     16.237571                23.26739  -0.34657345                           2                           3
+  Middle    Salinity Near-bottom 144                -24.931516     24.931516     25.717387               31.570723  -0.19225769                           2                           2
+  Middle    Salinity     Surface 144                -7.8618733     7.8618733     9.1834406               15.358639   -0.6398071                           4                           4
+  Middle Temperature   Mid-depth 144                -2.5890701     2.5890701     3.5336677               7.1856205   0.92716138                           2                           3
+  Middle Temperature Near-bottom 144                -4.4055319     4.4055319     5.4792218               9.7784187   0.77708303                           2                           2
+  Middle Temperature     Surface 144               -0.84749117     1.7264593      2.265649                4.904613   0.84180271                           4                           4
+  Middle          Vx   Mid-depth 144              -0.020462838   0.021201186   0.024382929              0.05288554   0.93664351                           2                           3
+  Middle          Vx Near-bottom 144              -0.033481091    0.03415187   0.041195693              0.10307053   0.53752622                           2                           2
+  Middle          Vx     Surface 144                0.10547092    0.10586472    0.10803457                0.145429   0.76330743                           4                           4
+  Middle          Vy   Mid-depth 144               0.019489878   0.019897293    0.02115229             0.034766431   0.91183349                           2                           3
+  Middle          Vy Near-bottom 144               0.011385985   0.015791829   0.019097871             0.041913069  0.077158771                           2                           2
+  Middle          Vy     Surface 144              -0.061071408   0.061234174   0.062705693             0.085478309   0.67847931                           4                           4
+  Middle          Vz   Mid-depth 144            -4.0502224e-05 4.2942727e-05 5.5471827e-05           0.00023840903   0.37279572                           2                           3
+  Middle          Vz Near-bottom 144             1.4352436e-07 2.0550957e-05 2.8055241e-05            0.0001647495   0.40618728                           2                           2
+  Middle          Vz     Surface 144            -4.0232096e-05 4.0248854e-05 4.6257746e-05           0.00010715145   0.26021001                           4                           4
+  Middle Water level          2D 144               0.035045404   0.035525433   0.037366683             0.060557966   0.99177028                           4                           4
+   Upper    Salinity   Mid-depth 144                -7.0875468     7.1176921     7.5919428               9.9228458  -0.14979122                           4                           4
+   Upper    Salinity Near-bottom 144                -20.776511     20.777548     22.518938                27.17635    -0.684495                           3                           3
+   Upper    Salinity     Surface 144               -0.42283121      1.246552     1.5522745               5.6606227   0.72996743                           4                           4
+   Upper Temperature   Mid-depth 144                -3.1751756     3.1914046     3.2933116               4.9562297   0.94994836                           4                           4
+   Upper Temperature Near-bottom 144                -8.1796558     8.1796558      8.427468               9.3312202   0.79553396                           3                           3
+   Upper Temperature     Surface 144              -0.058707378    0.76300944     1.1915193               5.4121561   0.89929676                           4                           4
+   Upper          Vx   Mid-depth 144            -7.6260238e-05  0.0063377178  0.0086265875             0.038617337   0.21541332                           4                           4
+   Upper          Vx Near-bottom 144              -0.024264373   0.024297639   0.024712268             0.031059564   0.38331727                           3                           3
+   Upper          Vx     Surface 144               0.032314944   0.032314944   0.032825245             0.049533956   0.76373923                           4                           4
+   Upper          Vy   Mid-depth 144               0.025087445    0.02525989   0.025640078             0.044148412   0.84153019                           4                           4
+   Upper          Vy Near-bottom 144               0.030126157   0.030223795   0.030740077             0.043444691   0.23670385                           3                           3
+   Upper          Vy     Surface 144              -0.056659989    0.05666872    0.05778491             0.075365549   0.54750605                           4                           4
+   Upper          Vz   Mid-depth 144            -4.0703701e-05 4.2760294e-05 5.2351186e-05           0.00017004317  0.070238902                           4                           4
+   Upper          Vz Near-bottom 144            -7.4189634e-05 7.6683139e-05 8.4243665e-05           0.00020302564    0.1338683                           3                           3
+   Upper          Vz     Surface 144            -6.5083393e-05 6.5694822e-05 6.8787579e-05           0.00013419567   0.35693692                           4                           4
+   Upper Water level          2D 144               0.034855559    0.03615209   0.039457507             0.071582663   0.98429915                           4                           4
+
+===== OUTPUT FILES =====
+Long time-series CSV: D:\SCHISM_W9\TUFLOWFV_Tutorial_M05\Tutorial_Module_05_Estuary_Module\Complete_Model\TUFLOWFV\comparison_three_locations\final_timeseries_comparison\csv\all_locations_timeseries_long.csv
+Metrics CSV: D:\SCHISM_W9\TUFLOWFV_Tutorial_M05\Tutorial_Module_05_Estuary_Module\Complete_Model\TUFLOWFV\comparison_three_locations\final_timeseries_comparison\csv\all_locations_metrics.csv
+Vertical targets CSV: D:\SCHISM_W9\TUFLOWFV_Tutorial_M05\Tutorial_Module_05_Estuary_Module\Complete_Model\TUFLOWFV\comparison_three_locations\final_timeseries_comparison\csv\all_locations_vertical_targets.csv
+Number of figures: 21

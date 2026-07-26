@@ -1,0 +1,85 @@
+===== SAME-COORDINATE OCEAN RESIDUAL COMPARISON =====
+
+TUFLOW result: D:\SCHISM_W9\TUFLOWFV_Tutorial_M05\Tutorial_Module_05_Estuary_Module\Complete_Model\TUFLOWFV\results\HYD_002_W.nc
+SCHISM outputs: R:\Estuary_SCHISM-Q8213\9.0 Developed models\Dongfang_SCHISM_TEST\spoon_estuary_multi_model\schism_tutorial_m05_benchmark\outputs
+SCHISM hgrid title: Spoon Estuary TUFLOW-matched mixed-element mesh
+
+Records: 144
+First  : 2011-05-01 01:00:00
+Last   : 2011-05-07 00:00:00
+
+Positive normal velocity means movement from the Ocean boundary toward the model interior.
+
+Both models are evaluated at the exact TUFLOW cell_X/cell_Y coordinates of the six cells immediately adjacent to the Ocean boundary.
+
+Common vertical targets:
+  Common reference surface = 0.5 × (TUFLOW water level + SCHISM water level)
+  Surface = common surface - 0.500 m
+  Mid-depth = midpoint between common surface and common bed
+  Near-bottom = common bed + 0.500 m
+
+Common bed = 0.5 × (TUFLOW cell bed + SCHISM interpolated bed)
+
+===== OVERALL SUMMARY =====
+
+ model       level  record_count  mean_normal_velocity_ms  minimum_normal_velocity_ms  maximum_normal_velocity_ms  inward_time_fraction  outward_time_fraction  mean_salinity_all_psu  mean_salinity_during_inflow_psu  mean_salinity_during_outflow_psu  mean_temperature_all_degC  mean_salt_advection_index_psu_ms  minimum_valid_segment_count  maximum_valid_segment_count
+SCHISM   Mid-depth           144              -0.04813472                 -0.13959483                  0.05164315            0.27777778             0.72222222            29.88561013                      32.84050410                       28.74911245                19.35008103                       -0.88382368                            6                            6
+SCHISM Near-bottom           144              -0.01954008                 -0.09882891                  0.06260442            0.40277778             0.59722222            30.53436942                      32.79884131                       29.00716744                19.43534058                       -0.09698181                            6                            6
+SCHISM     Surface           144              -0.05982250                 -0.15923248                  0.04818878            0.24305556             0.75694444            29.67622260                      32.84606202                       28.65838425                19.32129762                       -1.19318720                            6                            6
+TUFLOW   Mid-depth           144               0.01718684                 -0.08689998                  0.10406515            0.56250000             0.43750000            32.62833845                      32.92349487                       32.24885163                19.65532628                        0.81310600                            6                            6
+TUFLOW Near-bottom           144               0.01656690                 -0.03774098                  0.07094789            0.62500000             0.37500000            33.60249344                      33.57412489                       33.64977437                19.82344698                        0.70462814                            4                            4
+TUFLOW     Surface           144              -0.16477844                 -0.45972668                 -0.01640478            0.00000000             1.00000000            23.10530765                              NaN                       23.10530765                17.82295058                       -3.66479379                            6                            6
+
+===== DIRECT MEAN-VELOCITY COMPARISON =====
+
+Surface: TUFLOW mean=-0.16477844 m/s; SCHISM mean=-0.05982250 m/s; difference SCHISM-TUFLOW=0.10495595 m/s
+Mid-depth: TUFLOW mean=0.01718684 m/s; SCHISM mean=-0.04813472 m/s; difference SCHISM-TUFLOW=-0.06532156 m/s
+Near-bottom: TUFLOW mean=0.01656690 m/s; SCHISM mean=-0.01954008 m/s; difference SCHISM-TUFLOW=-0.03610698 m/s
+
+===== PER-SEGMENT SUMMARY =====
+
+ model       level  segment_number  element_id  cell_number_one_based       cell_x       cell_y  record_count  mean_normal_velocity_ms  inward_time_fraction  mean_salinity_psu  mean_salt_advection_index_psu_ms
+SCHISM   Mid-depth               1        1362                   1362 159.07563374 -31.35809110           144              -0.22528201            0.00000000        23.64425822                       -5.16575116
+SCHISM   Mid-depth               2        1367                   1367 159.07491940 -31.35837101           144              -0.16817423            0.00000000        26.38011585                       -4.26289548
+SCHISM   Mid-depth               3        1371                   1371 159.07420516 -31.35865113           144              -0.04179121            0.23611111        31.02429774                       -1.17682803
+SCHISM   Mid-depth               4        1374                   1374 159.07349113 -31.35893111           144               0.06654129            0.97222222        33.45866281                        2.29654137
+SCHISM   Mid-depth               5        1375                   1375 159.07277678 -31.35921104           144               0.07064411            0.85416667        33.01860319                        2.44854928
+SCHISM   Mid-depth               6        1373                   1373 159.07206255 -31.35949114           144               0.00925775            0.52777778        31.78825099                        0.55756344
+SCHISM Near-bottom               1        1362                   1362 159.07563374 -31.35809110           144              -0.22322088            0.00000000        23.64689653                       -5.11849313
+SCHISM Near-bottom               2        1367                   1367 159.07491940 -31.35837101           144              -0.11061240            0.00694444        29.12066574                       -3.02888876
+SCHISM Near-bottom               3        1371                   1371 159.07420516 -31.35865113           144               0.02029950            0.76388889        31.34328957                        0.69210880
+SCHISM Near-bottom               4        1374                   1374 159.07349113 -31.35893111           144               0.07225784            0.97916667        33.43802835                        2.46217126
+SCHISM Near-bottom               5        1375                   1375 159.07277678 -31.35921104           144               0.08345481            0.94444444        33.59650089                        2.89631756
+SCHISM Near-bottom               6        1373                   1373 159.07206255 -31.35949114           144               0.04056870            0.57638889        32.05891913                        1.51488520
+SCHISM     Surface               1        1362                   1362 159.07563374 -31.35809110           144              -0.23580454            0.00000000        23.03713331                       -5.31020288
+SCHISM     Surface               2        1367                   1367 159.07491940 -31.35837101           144              -0.17457032            0.00000000        26.37018912                       -4.42314519
+SCHISM     Surface               3        1371                   1371 159.07420516 -31.35865113           144              -0.04799254            0.22916667        31.01064632                       -1.35853131
+SCHISM     Surface               4        1374                   1374 159.07349113 -31.35893111           144               0.06116515            0.93750000        33.44666999                        2.12530556
+SCHISM     Surface               5        1375                   1375 159.07277678 -31.35921104           144               0.06450731            0.75000000        33.00266331                        2.25967262
+SCHISM     Surface               6        1373                   1373 159.07206255 -31.35949114           144              -0.02624924            0.45833333        31.19008771                       -0.45243115
+TUFLOW   Mid-depth               1        1362                   1362 159.07563374 -31.35809110           144              -0.10604577            0.03472222        25.52417466                       -2.59118238
+TUFLOW   Mid-depth               2        1367                   1367 159.07491940 -31.35837101           144               0.02834830            0.59722222        33.07661056                        1.03445623
+TUFLOW   Mid-depth               3        1371                   1371 159.07420516 -31.35865113           144               0.03913555            0.66666667        34.44192853                        1.36513567
+TUFLOW   Mid-depth               4        1374                   1374 159.07349113 -31.35893111           144               0.11445283            1.00000000        34.85185950                        3.99018723
+TUFLOW   Mid-depth               5        1375                   1375 159.07277678 -31.35921104           144               0.06902953            0.99305556        34.84638021                        2.40642242
+TUFLOW   Mid-depth               6        1373                   1373 159.07206255 -31.35949114           144              -0.04187475            0.16666667        33.02591538                       -1.32855554
+TUFLOW Near-bottom               1        1362                   1362 159.07563374 -31.35809110           144              -0.06985809            0.09027778        29.52918880                       -1.94037324
+TUFLOW Near-bottom               2        1367                   1367 159.07491940 -31.35837101           144               0.05703495            0.95138889        34.92697349                        1.99215420
+TUFLOW Near-bottom               3        1371                   1371 159.07420516 -31.35865113           144               0.06568034            0.97222222        34.99727507                        2.29854424
+TUFLOW Near-bottom               4        1374                   1374 159.07349113 -31.35893111             0                      NaN                   NaN                NaN                               NaN
+TUFLOW Near-bottom               5        1375                   1375 159.07277678 -31.35921104             0                      NaN                   NaN                NaN                               NaN
+TUFLOW Near-bottom               6        1373                   1373 159.07206255 -31.35949114           144               0.01336188            0.75694444        34.95496610                        0.46664268
+TUFLOW     Surface               1        1362                   1362 159.07563374 -31.35809110           144              -0.12953401            0.00694444        22.51985411                       -2.83571746
+TUFLOW     Surface               2        1367                   1367 159.07491940 -31.35837101           144              -0.14005733            0.04166667        23.46201779                       -3.10581304
+TUFLOW     Surface               3        1371                   1371 159.07420516 -31.35865113           144              -0.21575042            0.00000000        23.30451238                       -4.86224129
+TUFLOW     Surface               4        1374                   1374 159.07349113 -31.35893111           144              -0.15020793            0.01388889        23.17036890                       -3.33115224
+TUFLOW     Surface               5        1375                   1375 159.07277678 -31.35921104           144              -0.17098537            0.00000000        23.14624099                       -3.80115171
+TUFLOW     Surface               6        1373                   1373 159.07206255 -31.35949114           144              -0.18215829            0.00000000        23.02837392                       -4.05320503
+
+===== OUTPUT FILES =====
+
+Section CSV: D:\SCHISM_W9\TUFLOWFV_Tutorial_M05\Tutorial_Module_05_Estuary_Module\Complete_Model\TUFLOWFV\comparison_three_locations\same_coordinate_ocean_residual_comparison\same_coordinate_section_timeseries.csv
+Segment CSV: D:\SCHISM_W9\TUFLOWFV_Tutorial_M05\Tutorial_Module_05_Estuary_Module\Complete_Model\TUFLOWFV\comparison_three_locations\same_coordinate_ocean_residual_comparison\same_coordinate_segment_timeseries.csv
+Summary CSV: D:\SCHISM_W9\TUFLOWFV_Tutorial_M05\Tutorial_Module_05_Estuary_Module\Complete_Model\TUFLOWFV\comparison_three_locations\same_coordinate_ocean_residual_comparison\same_coordinate_summary.csv
+Segment summary CSV: D:\SCHISM_W9\TUFLOWFV_Tutorial_M05\Tutorial_Module_05_Estuary_Module\Complete_Model\TUFLOWFV\comparison_three_locations\same_coordinate_ocean_residual_comparison\same_coordinate_segment_summary.csv
+Segment definitions: D:\SCHISM_W9\TUFLOWFV_Tutorial_M05\Tutorial_Module_05_Estuary_Module\Complete_Model\TUFLOWFV\comparison_three_locations\same_coordinate_ocean_residual_comparison\same_coordinate_segment_definitions.txt
