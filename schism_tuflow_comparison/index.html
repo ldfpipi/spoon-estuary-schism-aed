@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SCHISM–TUFLOW Comparison Update</title>
+<style>
+:root{
+  --ink:#152033;
+  --muted:#667085;
+  --line:#e7eaf0;
+  --panel:#ffffff;
+  --soft:#f6f8fb;
+  --accent:#1769aa;
+  --accent2:#0b4f7a;
+  --good:#16794b;
+  --warn:#a15c00;
+  --intrinsic:#7a3e8e;
+  --shadow:0 8px 28px rgba(15,23,42,.08);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;
+  font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;
+  color:var(--ink);
+  background:var(--soft);
+  line-height:1.6;
+}
+.hero{
+  background:linear-gradient(135deg,#0b3555,#1769aa);
+  color:white;
+  padding:56px 24px 46px;
+}
+.hero-inner{max-width:1160px;margin:auto}
+.eyebrow{
+  font-size:13px;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+  opacity:.78;
+  font-weight:700;
+}
+h1{
+  margin:8px 0 10px;
+  font-size:clamp(32px,5vw,54px);
+  line-height:1.08;
+}
+.hero p{
+  max-width:850px;
+  margin:0;
+  font-size:18px;
+  color:rgba(255,255,255,.88);
+}
+.nav{
+  position:sticky;
+  top:0;
+  z-index:10;
+  background:rgba(255,255,255,.96);
+  backdrop-filter:blur(8px);
+  border-bottom:1px solid var(--line);
+}
+.nav-inner{
+  max-width:1160px;
+  margin:auto;
+  padding:10px 18px;
+  display:flex;
+  gap:8px;
+  overflow:auto;
+}
+.nav a{
+  white-space:nowrap;
+  color:#344054;
+  text-decoration:none;
+  font-size:14px;
+  font-weight:650;
+  padding:8px 12px;
+  border-radius:999px;
+}
+.nav a:hover{background:#eef5fb;color:var(--accent2)}
+main{
+  max-width:1160px;
+  margin:0 auto;
+  padding:28px 20px 70px;
+}
+.section{
+  background:var(--panel);
+  border:1px solid var(--line);
+  border-radius:18px;
+  padding:30px;
+  margin:22px 0;
+  box-shadow:var(--shadow);
+}
+.section h2{
+  margin:0 0 8px;
+  font-size:28px;
+  line-height:1.2;
+}
+.section-intro{
+  color:var(--muted);
+  margin:0 0 22px;
+  max-width:920px;
+}
+.table-wrap{overflow:auto;border:1px solid var(--line);border-radius:12px}
+table{
+  width:100%;
+  border-collapse:collapse;
+  min-width:820px;
+  font-size:14px;
+}
+th,td{padding:12px 14px;border-bottom:1px solid var(--line);vertical-align:top}
+th{
+  background:#f8fafc;
+  text-align:left;
+  font-size:12px;
+  letter-spacing:.04em;
+  text-transform:uppercase;
+  color:#475467;
+}
+tr:last-child td{border-bottom:0}
+.badge{
+  display:inline-block;
+  border-radius:999px;
+  padding:3px 9px;
+  font-size:12px;
+  font-weight:750;
+}
+.matched{background:#e8f6ee;color:var(--good)}
+.paired{background:#fff3df;color:var(--warn)}
+.adjusted{background:#e8f2fb;color:var(--accent2)}
+.intrinsic{background:#f3eaf6;color:var(--intrinsic)}
+.note{
+  margin-top:14px;
+  padding:12px 14px;
+  border-left:4px solid var(--accent);
+  background:#f2f8fd;
+  color:#344054;
+  border-radius:8px;
+}
+.grid-2{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:18px;
+}
+.grid-3{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:16px;
+}
+.figure-card{
+  border:1px solid var(--line);
+  border-radius:14px;
+  background:#fff;
+  overflow:hidden;
+}
+.figure-card img{
+  width:100%;
+  display:block;
+  background:white;
+}
+.figure-card .cap{
+  padding:11px 13px 13px;
+  font-size:13px;
+  color:#475467;
+  border-top:1px solid var(--line);
+}
+.figure-full{
+  margin-top:18px;
+  border:1px solid var(--line);
+  border-radius:14px;
+  overflow:hidden;
+  background:#fff;
+}
+.figure-full img{display:block;width:100%}
+.figure-full .cap{
+  padding:11px 14px 13px;
+  border-top:1px solid var(--line);
+  color:#475467;
+  font-size:13px;
+}
+.takeaway{
+  margin-top:18px;
+  border-radius:14px;
+  background:linear-gradient(135deg,#eef7fd,#f7fbfe);
+  border:1px solid #d5e8f6;
+  padding:18px 20px;
+}
+.takeaway strong{color:var(--accent2)}
+.small{font-size:13px;color:var(--muted)}
+footer{
+  max-width:1160px;
+  margin:auto;
+  padding:0 20px 40px;
+  color:#667085;
+  font-size:13px;
+  text-align:center;
+}
+@media(max-width:820px){
+  .section{padding:22px 16px}
+  .grid-2,.grid-3{grid-template-columns:1fr}
+  h1{font-size:34px}
+}
+
+.figure-card img,
+.figure-full img{
+  cursor: zoom-in;
+  transition: transform .18s ease, opacity .18s ease;
+}
+.figure-card img:hover,
+.figure-full img:hover{
+  opacity:.96;
+}
+
+.lightbox{
+  position:fixed;
+  inset:0;
+  z-index:9999;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  padding:28px;
+  background:rgba(8,15,27,.92);
+  backdrop-filter:blur(4px);
+}
+.lightbox.open{display:flex}
+.lightbox-inner{
+  position:relative;
+  max-width:96vw;
+  max-height:94vh;
+}
+.lightbox img{
+  display:block;
+  max-width:96vw;
+  max-height:88vh;
+  width:auto;
+  height:auto;
+  object-fit:contain;
+  background:white;
+  border-radius:10px;
+  box-shadow:0 20px 70px rgba(0,0,0,.45);
+  cursor:zoom-out;
+}
+.lightbox-caption{
+  max-width:90vw;
+  margin:10px auto 0;
+  color:rgba(255,255,255,.9);
+  text-align:center;
+  font-size:14px;
+}
+.lightbox-close{
+  position:fixed;
+  top:16px;
+  right:20px;
+  width:44px;
+  height:44px;
+  border:0;
+  border-radius:999px;
+  background:rgba(255,255,255,.16);
+  color:white;
+  font-size:30px;
+  line-height:40px;
+  cursor:pointer;
+}
+.lightbox-close:hover{background:rgba(255,255,255,.26)}
+body.lightbox-open{overflow:hidden}
+
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="hero-inner">
+    <div class="eyebrow">Internal reporting update</div>
+    <h1>SCHISM–TUFLOW Comparison</h1>
+    <p>Latest paired-model results, with emphasis on vertical-grid sensitivity, salinity intrusion and controlled flat-bed tests.</p>
+  </div>
+</header>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="#settings">1. Settings</a>
+    <a href="#three">2. 3 m vs 3 m</a>
+    <a href="#six">3. 6 m vs 6 m</a>
+    <a href="#vertical">4. Vertical mesh</a>
+    <a href="#flat">5. Flat bed</a>
+  </div>
+</nav>
+
+<main>
+
+<section class="section" id="settings">
+  <h2>1. Model setting comparison</h2>
+  <p class="section-intro">
+    The comparison has progressively aligned the main user-controlled geometry, forcing and friction settings.
+    Some native model representations and numerical algorithms remain inherently different and are therefore not described as exact matches.
+  </p>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Category</th>
+          <th>Setting</th>
+          <th>TUFLOW</th>
+          <th>SCHISM</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Geometry</td>
+          <td>Horizontal mesh</td>
+          <td>TUFLOW FV mesh</td>
+          <td>Converted from the same mesh</td>
+          <td><span class="badge matched">Matched</span></td>
+        </tr>
+        <tr>
+          <td>Geometry</td>
+          <td>Bathymetry representation</td>
+          <td>Cell-centred</td>
+          <td>Node-based</td>
+          <td><span class="badge adjusted">Adjusted / model-specific</span></td>
+        </tr>
+        <tr>
+          <td>Vertical grid</td>
+          <td>Transition depth</td>
+          <td>3 m and 6 m configurations tested</td>
+          <td>h<sub>s</sub> = 3 m and 6 m configurations tested</td>
+          <td><span class="badge paired">Paired tests</span></td>
+        </tr>
+        <tr>
+          <td>Vertical grid</td>
+          <td>Sigma structure</td>
+          <td>Paired layer configurations</td>
+          <td>Corresponding paired configurations</td>
+          <td><span class="badge paired">Paired tests</span></td>
+        </tr>
+        <tr>
+          <td>Bottom friction</td>
+          <td>Manning n</td>
+          <td>0.0025</td>
+          <td>0.0025</td>
+          <td><span class="badge matched">Matched</span></td>
+        </tr>
+        <tr>
+          <td>River boundary</td>
+          <td>Discharge</td>
+          <td>20 m³/s</td>
+          <td>20 m³/s</td>
+          <td><span class="badge matched">Matched forcing</span></td>
+        </tr>
+        <tr>
+          <td>River boundary</td>
+          <td>Salinity / temperature</td>
+          <td>0 psu / 10 °C</td>
+          <td>0 psu / 10 °C</td>
+          <td><span class="badge matched">Matched</span></td>
+        </tr>
+        <tr>
+          <td>Ocean boundary</td>
+          <td>Water level</td>
+          <td>Prescribed water level</td>
+          <td>Same water-level forcing</td>
+          <td><span class="badge matched">Matched forcing</span></td>
+        </tr>
+        <tr>
+          <td>Ocean boundary</td>
+          <td>Salinity / temperature</td>
+          <td>35 psu / 20 °C</td>
+          <td>35 psu / 20 °C</td>
+          <td><span class="badge matched">Matched</span></td>
+        </tr>
+        <tr>
+          <td>Atmospheric forcing</td>
+          <td>Meteorological forcing</td>
+          <td>CFSR</td>
+          <td>Same CFSR forcing</td>
+          <td><span class="badge matched">Matched forcing</span></td>
+        </tr>
+        <tr>
+          <td>Native representation</td>
+          <td>Vertical storage / solver formulation</td>
+          <td>Cell-centred FV formulation</td>
+          <td>Node-based SCHISM formulation</td>
+          <td><span class="badge intrinsic">Intrinsic difference</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="note">
+    <strong>Interpretation:</strong> the paired tests align the main controllable settings, but they do not imply identical native numerical formulations.
+  </div>
+</section>
+
+<section class="section" id="three">
+  <h2>2. 3 m vs 3 m comparison</h2>
+  <p class="section-intro">
+    Both models were compared using a nominal 3 m transition depth with four sigma cells.
+    Although the nominal vertical configuration was aligned, clear differences remained in the simulated salinity and temperature structure.
+  </p>
+
+  <div class="grid-2">
+    <div class="figure-card">
+      <img src="figures/02_3m_vs_3m/1275871a-3887-4144-83bb-9ec01649e55b.png" alt="3 m salinity comparison">
+      <div class="cap"><strong>Salinity:</strong> TUFLOW 3 m vs SCHISM 3 m.</div>
+    </div>
+    <div class="figure-card">
+      <img src="figures/02_3m_vs_3m/e29ccebb-4eb2-4b38-a2a2-d3fa9d24cdd3.png" alt="3 m temperature comparison">
+      <div class="cap"><strong>Temperature:</strong> TUFLOW 3 m vs SCHISM 3 m.</div>
+    </div>
+  </div>
+
+  <div class="takeaway">
+    <strong>Key result:</strong> matching the nominal 3 m vertical-grid settings alone did not produce a one-to-one hydrographic response.
+  </div>
+</section>
+
+<section class="section" id="six">
+  <h2>3. 6 m vs 6 m comparison</h2>
+  <p class="section-intro">
+    A second paired test moved the TUFLOW vertical transition to 6 m and compared it with the SCHISM h<sub>s</sub> = 6 m configuration.
+    This provides a controlled reference for assessing sensitivity to the transition depth and upper-layer structure.
+  </p>
+
+  <div class="grid-2">
+    <div class="figure-card">
+      <img src="figures/03_6m_vs_6m/a27da4b1-6180-47d0-b72b-b03d47c448cc.png" alt="TUFLOW matched 6 m grid salinity">
+      <div class="cap"><strong>TUFLOW:</strong> matched 6 m / 7 sigma-cell configuration.</div>
+    </div>
+    <div class="figure-card">
+      <img src="figures/03_6m_vs_6m/60c608af-1c33-4e73-8258-bf8453b4c863.png" alt="SCHISM 6 m grid salinity">
+      <div class="cap"><strong>SCHISM:</strong> h<sub>s</sub> = 6 m / 7 S-cell configuration.</div>
+    </div>
+  </div>
+
+  <div class="takeaway">
+    <strong>Key result:</strong> differences remained even when both models were configured around the same nominal 6 m transition depth, motivating a closer inspection of the physical vertical-mesh representation.
+  </div>
+</section>
+
+<section class="section" id="vertical">
+  <h2>4. Vertical Mesh Investigation</h2>
+  <p class="section-intro">
+    Inspection of the vertical mesh showed that matching the nominal transition depth and number of sigma layers did not necessarily result in the same physical vertical representation in TUFLOW and SCHISM. Differences remained in the locations of the vertical cell centres, particularly near the bed.
+  </p>
+
+  <p>
+    The SCHISM mesh was therefore adjusted to better represent the TUFLOW vertical structure.
+    <strong>Following the mesh adjustment, the salt wedge penetrated substantially further upstream and the overall salinity distribution became closer to the TUFLOW result.</strong>
+    This demonstrates the strong sensitivity of the simulated estuarine salinity structure to vertical-mesh and bathymetry representation.
+  </p>
+
+  <div class="grid-2">
+    <div class="figure-card">
+      <img src="figures/04_vertical_mesh/Mesh2.png" alt="Vertical mesh comparison before further adjustment">
+      <div class="cap">Vertical 3D-cell-centre comparison used to inspect the mismatch in physical layer locations.</div>
+    </div>
+    <div class="figure-card">
+      <img src="figures/04_vertical_mesh/Mesh_1.png" alt="Vertical mesh comparison after adjustment">
+      <div class="cap">Vertical-mesh comparison after the subsequent mesh/bathymetry adjustment.</div>
+    </div>
+  </div>
+
+  <div class="figure-full">
+    <img src="figures/04_vertical_mesh/TUFLOW_MESH1_MESH2.png" alt="Salinity curtain before and after mesh bathymetry adjustment">
+    <div class="cap">
+      Salinity response to the mesh/bathymetry adjustment. The adjusted SCHISM case shows substantially greater upstream saline intrusion than the pre-adjustment case.
+    </div>
+  </div>
+
+  <div class="takeaway">
+    <strong>Main finding:</strong> improving the physical vertical-mesh / bathymetry representation moved the salt wedge substantially further upstream.
+  </div>
+</section>
+
+<section class="section" id="flat">
+  <h2>5. Flat-bed comparison</h2>
+  <p class="section-intro">
+    A flat-bed case was used as an additional controlled comparison to reduce geometric complexity and examine how the two models evolve under a simpler bathymetric configuration.
+  </p>
+
+  <div class="grid-3">
+    <div class="figure-card">
+      <img src="figures/06_flat_bed/salinity_curtain_20110501_0400.png" alt="Flat bed salinity at 04:00 AEST">
+      <div class="cap">2011-05-01 04:00 AEST</div>
+    </div>
+    <div class="figure-card">
+      <img src="figures/06_flat_bed/salinity_curtain_20110501_0600.png" alt="Flat bed salinity at 06:00 AEST">
+      <div class="cap">2011-05-01 06:00 AEST</div>
+    </div>
+    <div class="figure-card">
+      <img src="figures/06_flat_bed/salinity_curtain_20110501_0800.png" alt="Flat bed salinity at 08:00 AEST">
+      <div class="cap">2011-05-01 08:00 AEST</div>
+    </div>
+  </div>
+
+  <div class="takeaway">
+    <strong>Purpose of this test:</strong> reduce bathymetric complexity and provide a simpler reference for diagnosing the remaining SCHISM–TUFLOW differences.
+  </div>
+</section>
+
+</main>
+
+<footer>
+  SCHISM–TUFLOW comparison update · Prepared for internal reporting · 14 August 2026
+</footer>
+
+
+<div class="lightbox" id="lightbox" aria-hidden="true">
+  <button class="lightbox-close" id="lightboxClose" aria-label="Close image">×</button>
+  <div class="lightbox-inner">
+    <img id="lightboxImage" src="" alt="">
+    <div class="lightbox-caption" id="lightboxCaption"></div>
+  </div>
+</div>
+
+<script>
+(function () {
+  const lightbox = document.getElementById('lightbox');
+  const lightboxImage = document.getElementById('lightboxImage');
+  const lightboxCaption = document.getElementById('lightboxCaption');
+  const closeButton = document.getElementById('lightboxClose');
+
+  const images = document.querySelectorAll('.figure-card img, .figure-full img');
+
+  function openLightbox(img) {
+    lightboxImage.src = img.src;
+    lightboxImage.alt = img.alt || '';
+
+    const card = img.closest('.figure-card, .figure-full');
+    const caption = card ? card.querySelector('.cap') : null;
+    lightboxCaption.textContent = caption ? caption.textContent.trim() : (img.alt || '');
+
+    lightbox.classList.add('open');
+    lightbox.setAttribute('aria-hidden', 'false');
+    document.body.classList.add('lightbox-open');
+  }
+
+  function closeLightbox() {
+    lightbox.classList.remove('open');
+    lightbox.setAttribute('aria-hidden', 'true');
+    document.body.classList.remove('lightbox-open');
+    lightboxImage.src = '';
+  }
+
+  images.forEach(img => {
+    img.setAttribute('title', 'Click to enlarge');
+    img.addEventListener('click', () => openLightbox(img));
+  });
+
+  closeButton.addEventListener('click', closeLightbox);
+  lightboxImage.addEventListener('click', closeLightbox);
+
+  lightbox.addEventListener('click', (event) => {
+    if (event.target === lightbox) closeLightbox();
+  });
+
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape' && lightbox.classList.contains('open')) {
+      closeLightbox();
+    }
+  });
+})();
+</script>
+
+</body>
+</html>
